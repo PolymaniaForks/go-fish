@@ -10,17 +10,15 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
 import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potions;
-import net.minecraft.recipe.BrewingRecipeRegistry;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Util;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.alchemy.Potions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,15 +30,15 @@ import java.util.function.BiConsumer;
 
 public class GoFish implements ModInitializer {
 
-    public static final RegistryKey<ItemGroup> ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, id("group"));
+    public static final ResourceKey<CreativeModeTab> ITEM_GROUP = ResourceKey.create(Registries.CREATIVE_MODE_TAB, id("group"));
     public static final Logger LOGGER = LogManager.getLogger();
 
     @Override
     public void onInitialize() {
         PolymerItemGroupUtils.registerPolymerItemGroup(ITEM_GROUP, PolymerItemGroupUtils.builder()
                 .icon(() -> new ItemStack(GoFishItems.GOLDEN_FISH))
-                .displayName(Text.translatable("itemGroup.gofish.group"))
-                .entries((a, b) -> GoFishItems.ITEMS.forEach(b::add))
+                .title(Component.translatable("itemGroup.gofish.group"))
+                .displayItems((a, b) -> GoFishItems.ITEMS.forEach(b::accept))
                 .build());
 
         GoFishBlocks.init();
@@ -67,14 +65,14 @@ public class GoFish implements ModInitializer {
     }
 
     public static Identifier id(String name) {
-        return Identifier.of("gofish", name);
+        return Identifier.fromNamespaceAndPath("gofish", name);
     }
 
-    public void registerBrewingRecipes(BrewingRecipeRegistry.Builder builder) {
-        builder.registerPotionRecipe(Potions.AWKWARD, GoFishItems.CLOUDY_CRAB, Potions.SLOW_FALLING);
-        builder.registerPotionRecipe(Potions.AWKWARD, GoFishItems.CHARFISH, Potions.WEAKNESS);
-        builder.registerPotionRecipe(Potions.AWKWARD, GoFishItems.RAINY_BASS, Potions.WATER_BREATHING);
-        builder.registerPotionRecipe(Potions.AWKWARD, GoFishItems.MAGMA_COD, Potions.FIRE_RESISTANCE);
+    public void registerBrewingRecipes(PotionBrewing.Builder builder) {
+        builder.addMix(Potions.AWKWARD, GoFishItems.CLOUDY_CRAB, Potions.SLOW_FALLING);
+        builder.addMix(Potions.AWKWARD, GoFishItems.CHARFISH, Potions.WEAKNESS);
+        builder.addMix(Potions.AWKWARD, GoFishItems.RAINY_BASS, Potions.WATER_BREATHING);
+        builder.addMix(Potions.AWKWARD, GoFishItems.MAGMA_COD, Potions.FIRE_RESISTANCE);
     }
 
 }

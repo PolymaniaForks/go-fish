@@ -2,23 +2,23 @@ package draylar.gofish.item;
 
 import draylar.gofish.api.FishingBonus;
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.item.Items;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 public class LureItem extends Item implements FishingBonus, PolymerItem {
 
     private final int lure;
 
-    public LureItem(Settings settings, int lure) {
+    public LureItem(Properties settings, int lure) {
         super(settings);
         this.lure = lure;
     }
@@ -29,11 +29,11 @@ public class LureItem extends Item implements FishingBonus, PolymerItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
+        super.appendHoverText(stack, context, displayComponent, textConsumer, type);
 
         for(int i = 1; i <= 2; i++) {
-            textConsumer.accept(Text.translatable(String.format("gofish.lure.tooltip_%d", i), lure).formatted(Formatting.GRAY));
+            textConsumer.accept(Component.translatable(String.format("gofish.lure.tooltip_%d", i), lure).withStyle(ChatFormatting.GRAY));
         }
     }
 

@@ -7,10 +7,9 @@ import eu.pb4.polymer.resourcepack.extras.api.format.item.model.BasicItemModel;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.model.ConditionItemModel;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.property.bool.FishingRodCastProperty;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.FishingRodItem;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.FishingRodItem;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,18 +26,18 @@ public class PatboxLazyModelGen {
                 e.printStackTrace();
             }
         };
-        for (var item : Registries.ITEM) {
-            var id = Registries.ITEM.getId(item);
+        for (var item : BuiltInRegistries.ITEM) {
+            var id = BuiltInRegistries.ITEM.getKey(item);
             if (!id.getNamespace().equals("gofish")) {
                 continue;
             }
 
             if (item instanceof FishingRodItem) {
                 assetWriter.accept(id, new ItemAsset(new ConditionItemModel(new FishingRodCastProperty(),
-                        new BasicItemModel(id.withPrefixedPath("item/").withSuffixedPath("_cast")), new BasicItemModel(id.withPrefixedPath("item/"))),
+                        new BasicItemModel(id.withPrefix("item/").withSuffix("_cast")), new BasicItemModel(id.withPrefix("item/"))),
                         ItemAsset.Properties.DEFAULT).toJson());
             } else {
-                assetWriter.accept(id, new ItemAsset(new BasicItemModel(id.withPrefixedPath("item/")), ItemAsset.Properties.DEFAULT).toJson());
+                assetWriter.accept(id, new ItemAsset(new BasicItemModel(id.withPrefix("item/")), ItemAsset.Properties.DEFAULT).toJson());
             }
         }
     }

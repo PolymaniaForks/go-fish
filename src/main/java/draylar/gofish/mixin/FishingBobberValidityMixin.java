@@ -1,47 +1,47 @@
 package draylar.gofish.mixin;
 
 import draylar.gofish.item.ExtendedFishingRodItem;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FishingBobberEntity;
-import net.minecraft.item.FishingRodItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.FishingRodItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(FishingBobberEntity.class)
+@Mixin(FishingHook.class)
 public abstract class FishingBobberValidityMixin extends Entity {
 
-    @Shadow public abstract PlayerEntity getPlayerOwner();
+    @Shadow public abstract Player getPlayerOwner();
 
-    private FishingBobberValidityMixin(EntityType<?> type, World world) {
+    private FishingBobberValidityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     /**
-     * Patches {@link FishingBobberEntity#removeIfInvalid(PlayerEntity)} to work for all items of the type {@link FishingRodItem}.
+     * Patches {@link FishingHook#shouldStopFishing(Player)} to work for all items of the type {@link FishingRodItem}.
      *
-     * @param playerEntity  owner of this {@link FishingBobberEntity}
+     * @param playerEntity  owner of this {@link FishingHook}
      * @param cir  mixin callback info
      */
     @Inject(
-            method = "removeIfInvalid",
+            method = "shouldStopFishing",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void removeIfInvalid(PlayerEntity playerEntity, CallbackInfoReturnable<Boolean> cir) {
-        ItemStack mainHandStack = playerEntity.getMainHandStack();
-        ItemStack offHandStack = playerEntity.getOffHandStack();
+    private void removeIfInvalid(Player playerEntity, CallbackInfoReturnable<Boolean> cir) {
+        ItemStack mainHandStack = playerEntity.getMainHandItem();
+        ItemStack offHandStack = playerEntity.getOffhandItem();
 
         boolean mainHandHasRod = mainHandStack.getItem() instanceof ExtendedFishingRodItem;
         boolean offHandHasRod = offHandStack.getItem() instanceof ExtendedFishingRodItem;
 
-        if (!playerEntity.isRemoved() && playerEntity.isAlive() && (mainHandHasRod || offHandHasRod) && this.squaredDistanceTo(playerEntity) <= 1024.0D) {
+        if (!playerEntity.isRemoved() && playerEntity.isAlive() && (mainHandHasRod || offHandHasRod) && this.distanceToSqr(playerEntity) <= 1024.0D) {
             cir.setReturnValue(false);
         }
     }

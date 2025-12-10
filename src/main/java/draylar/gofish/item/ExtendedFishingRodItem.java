@@ -4,32 +4,32 @@ import draylar.gofish.api.*;
 import draylar.gofish.registry.GoFishEnchantments;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FishingBobberEntity;
-import net.minecraft.item.FishingRodItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.FishingRodItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
 
 public class ExtendedFishingRodItem extends FishingRodItem implements PolymerItem {
 
@@ -41,10 +41,10 @@ public class ExtendedFishingRodItem extends FishingRodItem implements PolymerIte
     private final boolean autosmelt;
     private final boolean lavaProof;
     private final boolean nightLuck;
-    private final Formatting formatting;
+    private final ChatFormatting formatting;
     private final int lines;
 
-    public ExtendedFishingRodItem(Settings settings, SoundInstance retrieve, SoundInstance cast, int baseLure, int baseLOTS, int baseExperience, boolean autosmelt, boolean lavaProof, boolean nightLuck, Formatting formatting, int tooltipLines) {
+    public ExtendedFishingRodItem(Properties settings, SoundInstance retrieve, SoundInstance cast, int baseLure, int baseLOTS, int baseExperience, boolean autosmelt, boolean lavaProof, boolean nightLuck, ChatFormatting formatting, int tooltipLines) {
         super(settings);
         this.retrieve = retrieve;
         this.cast = cast;
@@ -59,36 +59,36 @@ public class ExtendedFishingRodItem extends FishingRodItem implements PolymerIte
     }
 
     @Override
-    public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        ItemStack heldStack = user.getStackInHand(hand);
-        Random random = world.random;
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
+        ItemStack heldStack = user.getItemInHand(hand);
+        RandomSource random = world.random;
 
-        if(user.fishHook != null) {
+        if(user.fishing != null) {
             // Retrieve fishing bobber and damage Fishing Rod
-            if(!world.isClient()) {
-                int damage = user.fishHook.use(heldStack);
-                heldStack.damage(damage, user, hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+            if(!world.isClientSide()) {
+                int damage = user.fishing.retrieve(heldStack);
+                heldStack.hurtAndBreak(damage, user, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
             }
 
-            world.playSound(null, user.getX(), user.getY(), user.getZ(), retrieve.getSound(), SoundCategory.NEUTRAL, retrieve.getVolume(random), retrieve.getPitch(random));
+            world.playSound(null, user.getX(), user.getY(), user.getZ(), retrieve.getSound(), SoundSource.NEUTRAL, retrieve.getVolume(random), retrieve.getPitch(random));
         } else {
-            world.playSound(null, user.getX(), user.getY(), user.getZ(), cast.getSound(), SoundCategory.NEUTRAL, cast.getVolume(random), cast.getPitch(random));
+            world.playSound(null, user.getX(), user.getY(), user.getZ(), cast.getSound(), SoundSource.NEUTRAL, cast.getVolume(random), cast.getPitch(random));
 
             // Summon new fishing bobber
-            if(!world.isClient()) {
+            if(!world.isClientSide()) {
                 boolean smeltBuff = false;
                 int bonusLure = 0;
                 int bonusLuck = 0;
                 int bonusExperience = 0;
 
                 // Check for night luck
-                if(nightLuck && user.getEntityWorld().isNight()) {
+                if(nightLuck && user.level().isDarkOutside()) {
                     bonusLuck++;
                 }
 
                 // Find buffing items in player inventory
                 List<FishingBonus> found = new ArrayList<>();
-                for (ItemStack stack : user.getInventory().getMainStacks()) {
+                for (ItemStack stack : user.getInventory().getNonEquipmentItems()) {
                     Item item = stack.getItem();
 
                     if(item instanceof FishingBonus) {
@@ -107,45 +107,45 @@ public class ExtendedFishingRodItem extends FishingRodItem implements PolymerIte
                 }
 
                 // Check if this rod autosmelts
-                boolean hasDeepfryEnchantment = EnchantmentHelper.hasAnyEnchantmentsWith(heldStack, GoFishEnchantments.DEEPFRY);
+                boolean hasDeepfryEnchantment = EnchantmentHelper.has(heldStack, GoFishEnchantments.DEEPFRY);
                 boolean rodAutosmelts = heldStack.getItem() instanceof ExtendedFishingRodItem && ((ExtendedFishingRodItem) heldStack.getItem()).autosmelts();
                 boolean smelts = hasDeepfryEnchantment || rodAutosmelts || smeltBuff;
 
                 // Calculate lure and luck
-                int lure = Math.min((int) (EnchantmentHelper.getFishingTimeReduction((ServerWorld) world, heldStack, user) + baseLure + bonusLure), 5);
-                int lots = EnchantmentHelper.getFishingLuckBonus((ServerWorld) world, heldStack, user) + baseLOTS + bonusLuck;
+                int lure = Math.min((int) (EnchantmentHelper.getFishingTimeReduction((ServerLevel) world, heldStack, user) + baseLure + bonusLure), 5);
+                int lots = EnchantmentHelper.getFishingLuckBonus((ServerLevel) world, heldStack, user) + baseLOTS + bonusLuck;
 
                 // Summon bobber with stats
-                FishingBobberEntity bobber = new FishingBobberEntity(user, world, lots, lure);
-                world.spawnEntity(bobber);
+                FishingHook bobber = new FishingHook(user, world, lots, lure);
+                world.addFreshEntity(bobber);
                 ((FireproofEntity) bobber).gf_setFireproof(lavaProof);
                 ((SmeltingBobber) bobber).gf_setSmelts(smelts);
                 ((ExperienceBobber) bobber).gf_setBaseExperience(this.baseExperience + bonusExperience);
             }
 
-            user.incrementStat(Stats.USED.getOrCreateStat(this));
+            user.awardStat(Stats.ITEM_USED.get(this));
         }
 
-        return ActionResult.SUCCESS_SERVER;
+        return InteractionResult.SUCCESS_SERVER;
     }
 
     @Override
-    public Text getName(ItemStack stack) {
-        Text name = super.getName(stack);
-        if(name instanceof MutableText) {
-            ((MutableText) name).formatted(formatting);
+    public Component getName(ItemStack stack) {
+        Component name = super.getName(stack);
+        if(name instanceof MutableComponent) {
+            ((MutableComponent) name).withStyle(formatting);
         }
 
         return name;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
+        super.appendHoverText(stack, context, displayComponent, textConsumer, type);
 
         if(lines > 0) {
             for (int i = 1; i <= lines; i++) {
-                textConsumer.accept(Text.translatable(String.format("%s.tooltip_%d", getTranslationKey(), i)).formatted(Formatting.GRAY));
+                textConsumer.accept(Component.translatable(String.format("%s.tooltip_%d", getDescriptionId(), i)).withStyle(ChatFormatting.GRAY));
             }
         }
     }
@@ -169,33 +169,33 @@ public class ExtendedFishingRodItem extends FishingRodItem implements PolymerIte
 
     public static class Builder {
 
-        private Item.Settings settings = new Item.Settings().maxDamage(100);
-        private SoundInstance retrieve = new SoundInstance(SoundEvents.ENTITY_FISHING_BOBBER_RETRIEVE, 1.0F, SoundInstance.DEFAULT_PITCH);
-        private SoundInstance cast = new SoundInstance(SoundEvents.ENTITY_FISHING_BOBBER_THROW, 0.5F, SoundInstance.DEFAULT_PITCH);
+        private Item.Properties settings = new Item.Properties().durability(100);
+        private SoundInstance retrieve = new SoundInstance(SoundEvents.FISHING_BOBBER_RETRIEVE, 1.0F, SoundInstance.DEFAULT_PITCH);
+        private SoundInstance cast = new SoundInstance(SoundEvents.FISHING_BOBBER_THROW, 0.5F, SoundInstance.DEFAULT_PITCH);
         private int baseLure = 0;
         private int baseLOTS = 0;
         private int experience = 1;
         private boolean autosmelt = false;
         private boolean lavaProof = false;
         private boolean nightLuck = false;
-        private Formatting formatting = Formatting.WHITE;
+        private ChatFormatting formatting = ChatFormatting.WHITE;
         private int tooltipLines = 0;
 
-        public Builder(Item.Settings settings) {
+        public Builder(Item.Properties settings) {
             this.settings = settings;
         }
 
-        public Builder withSettings(Item.Settings settings) {
+        public Builder withSettings(Item.Properties settings) {
             this.settings = settings;
             return this;
         }
 
         public Builder durability(int durability) {
-            this.settings.maxDamage(durability);
+            this.settings.durability(durability);
             return this;
         }
 
-        public Builder color(Formatting formatting) {
+        public Builder color(ChatFormatting formatting) {
             this.formatting = formatting;
             return this;
         }

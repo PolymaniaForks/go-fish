@@ -1,22 +1,22 @@
 package draylar.gofish.registry;
 
 import draylar.gofish.GoFish;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class GoFishEntities {
 
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String name, BlockEntityType<T> entity) {
-        return Registry.register(Registries.BLOCK_ENTITY_TYPE, GoFish.id(name), entity);
+        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, GoFish.id(name), entity);
     }
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType<T> entity) {
-        return Registry.register(Registries.ENTITY_TYPE, GoFish.id(name), entity);
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, GoFish.id(name), entity);
     }
 
     public static void init() {

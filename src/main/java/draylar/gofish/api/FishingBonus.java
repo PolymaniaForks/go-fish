@@ -1,7 +1,7 @@
 package draylar.gofish.api;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public interface FishingBonus {
 
@@ -21,7 +21,7 @@ public interface FishingBonus {
         return false;
     }
 
-    default boolean shouldApply(World world, PlayerEntity player) {
+    default boolean shouldApply(Level world, Player player) {
         return true;
     }
 }

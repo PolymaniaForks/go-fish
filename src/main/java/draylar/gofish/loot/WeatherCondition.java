@@ -5,21 +5,21 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import draylar.gofish.registry.GoFishLoot;
-import net.minecraft.entity.Entity;
-import net.minecraft.loot.condition.LootCondition;
-import net.minecraft.loot.condition.LootConditionType;
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.util.context.ContextParameter;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.context.ContextKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraft.world.phys.Vec3;
 
-public record WeatherCondition(Optional<Boolean> raining, Optional<Boolean> thundering, Optional<Boolean> snowing) implements LootCondition {
+public record WeatherCondition(Optional<Boolean> raining, Optional<Boolean> thundering, Optional<Boolean> snowing) implements LootItemCondition {
 
     public static final MapCodec<WeatherCondition> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
@@ -31,23 +31,23 @@ public record WeatherCondition(Optional<Boolean> raining, Optional<Boolean> thun
     );
 
     @Override
-    public LootConditionType getType() {
+    public LootItemConditionType getType() {
         return GoFishLoot.WEATHER;
     }
 
 
     @Override
-    public Set<ContextParameter<?>> getAllowedParameters() {
-        return ImmutableSet.of(LootContextParameters.THIS_ENTITY, LootContextParameters.ORIGIN);
+    public Set<ContextKey<?>> getReferencedContextParams() {
+        return ImmutableSet.of(LootContextParams.THIS_ENTITY, LootContextParams.ORIGIN);
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        @Nullable Entity entity = lootContext.get(LootContextParameters.THIS_ENTITY);
-        @Nullable Vec3d pos = lootContext.get(LootContextParameters.ORIGIN);
+        @Nullable Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);
+        @Nullable Vec3 pos = lootContext.getOptionalParameter(LootContextParams.ORIGIN);
 
         if(entity != null && pos != null) {
-            World world = entity.getEntityWorld();
+            Level world = entity.level();
 
             // If raining is required and the world is not raining, return false.
             if (raining.isPresent() && raining.get() && !world.isRaining()) {
@@ -62,7 +62,7 @@ public record WeatherCondition(Optional<Boolean> raining, Optional<Boolean> thun
             // same check for snowing
             if (snowing.isPresent() && snowing.get()) {
                 // >= .15 = no snow
-                if(world.getBiome(entity.getBlockPos()).value().doesNotSnow(new BlockPos((int) Math.floor(pos.x), (int) Math.floor(pos.y), (int) Math.floor(pos.z)), world.getSeaLevel())) {
+                if(world.getBiome(entity.blockPosition()).value().warmEnoughToRain(new BlockPos((int) Math.floor(pos.x), (int) Math.floor(pos.y), (int) Math.floor(pos.z)), world.getSeaLevel())) {
                     return false;
                 }
 
@@ -76,7 +76,7 @@ public record WeatherCondition(Optional<Boolean> raining, Optional<Boolean> thun
         return false;
     }
 
-    public static LootCondition.Builder builder(boolean raining, boolean thundering, boolean snowing) {
+    public static LootItemCondition.Builder builder(boolean raining, boolean thundering, boolean snowing) {
         return () -> new WeatherCondition(Optional.of(raining), Optional.of(thundering), Optional.of(snowing));
     }
 }

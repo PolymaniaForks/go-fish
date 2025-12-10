@@ -5,12 +5,12 @@ import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Util;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public record BiomeTagPredicate(List<TagKey<Biome>> valid) {
 
     public static final Codec<BiomeTagPredicate> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                            TagKey.unprefixedCodec(RegistryKeys.BIOME).listOf().fieldOf("valid").forGetter(BiomeTagPredicate::valid)
+                            TagKey.codec(Registries.BIOME).listOf().fieldOf("valid").forGetter(BiomeTagPredicate::valid)
                     )
                     .apply(instance, BiomeTagPredicate::new)
     );
@@ -35,10 +35,10 @@ public record BiomeTagPredicate(List<TagKey<Biome>> valid) {
         return valid;
     }
 
-    public boolean test(RegistryEntry<Biome> biome) {
+    public boolean test(Holder<Biome> biome) {
 
         for(TagKey<Biome> tag : valid) {
-            if(biome.isIn(tag)) {
+            if(biome.is(tag)) {
                 return true;
             }
         }
@@ -70,14 +70,14 @@ public record BiomeTagPredicate(List<TagKey<Biome>> valid) {
         public Builder setValidByString(List<String> valid) {
             List<TagKey<Biome>> tagKeys = new ArrayList<>();
             for (String str : valid) {
-                tagKeys.add(TagKey.of(RegistryKeys.BIOME, Identifier.of(str)));
+                tagKeys.add(TagKey.create(Registries.BIOME, Identifier.parse(str)));
             }
             return setValid(tagKeys);
         }
 
         public Builder add(String tag) {
             if(!tag.isEmpty()) {
-                this.valid.add(TagKey.of(RegistryKeys.BIOME, Identifier.of(tag)));
+                this.valid.add(TagKey.create(Registries.BIOME, Identifier.parse(tag)));
             }
 
             return this;

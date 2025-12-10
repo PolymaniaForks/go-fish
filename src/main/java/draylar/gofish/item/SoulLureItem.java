@@ -2,24 +2,24 @@ package draylar.gofish.item;
 
 import draylar.gofish.api.FishingBonus;
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeKeys;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biomes;
 
 public class SoulLureItem extends Item implements FishingBonus, PolymerItem {
 
-    public SoulLureItem(Settings settings) {
+    public SoulLureItem(Properties settings) {
         super(settings);
     }
 
@@ -29,16 +29,16 @@ public class SoulLureItem extends Item implements FishingBonus, PolymerItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
+        super.appendHoverText(stack, context, displayComponent, textConsumer, type);
 
-        textConsumer.accept(Text.translatable(String.format("gofish.lure.tooltip_%d", 1)).formatted(Formatting.GRAY));
-        textConsumer.accept(Text.translatable(String.format("gofish.lots.tooltip_%d", 2), 1, " in Soul Sand Valley").formatted(Formatting.GRAY));
+        textConsumer.accept(Component.translatable(String.format("gofish.lure.tooltip_%d", 1)).withStyle(ChatFormatting.GRAY));
+        textConsumer.accept(Component.translatable(String.format("gofish.lots.tooltip_%d", 2), 1, " in Soul Sand Valley").withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public boolean shouldApply(World world, PlayerEntity player) {
-        return world.getBiome(player.getBlockPos()).matchesKey(BiomeKeys.SOUL_SAND_VALLEY);
+    public boolean shouldApply(Level world, Player player) {
+        return world.getBiome(player.blockPosition()).is(Biomes.SOUL_SAND_VALLEY);
     }
 
     @Override
