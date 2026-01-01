@@ -1,7 +1,5 @@
 package draylar.gofish.loot.biome;
 
-import com.google.common.collect.ImmutableSet;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import draylar.gofish.registry.GoFishLoot;
@@ -59,7 +57,7 @@ public record MatchBiomeLootCondition(Optional<BiomeTagPredicate> category, Opti
         return builder(Collections.emptyList(), List.of(biomes));
     }
 
-    public static LootItemCondition.Builder builder(TagKey<Biome>... categories) {
+    public static LootItemCondition.Builder builderTag(TagKey<Biome>... categories) {
         return builder(Arrays.asList(categories), Collections.emptyList());
     }
 
