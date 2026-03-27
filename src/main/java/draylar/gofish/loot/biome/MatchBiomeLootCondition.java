@@ -12,7 +12,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.phys.Vec3;
 
 public record MatchBiomeLootCondition(Optional<BiomeTagPredicate> category, Optional<BiomePredicate> biome) implements LootItemCondition {
@@ -26,9 +25,11 @@ public record MatchBiomeLootCondition(Optional<BiomeTagPredicate> category, Opti
     );
 
     @Override
-    public LootItemConditionType getType() {
+    public MapCodec<? extends LootItemCondition> codec() {
         return GoFishLoot.MATCH_BIOME;
     }
+
+
 
     @Override
     public boolean test(LootContext lootContext) {

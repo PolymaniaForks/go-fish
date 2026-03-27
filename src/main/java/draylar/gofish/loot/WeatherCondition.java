@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.phys.Vec3;
 
 public record WeatherCondition(Optional<Boolean> raining, Optional<Boolean> thundering, Optional<Boolean> snowing) implements LootItemCondition {
@@ -31,7 +30,7 @@ public record WeatherCondition(Optional<Boolean> raining, Optional<Boolean> thun
     );
 
     @Override
-    public LootItemConditionType getType() {
+    public MapCodec<? extends LootItemCondition> codec() {
         return GoFishLoot.WEATHER;
     }
 

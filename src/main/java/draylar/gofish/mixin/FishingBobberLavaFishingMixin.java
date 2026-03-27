@@ -58,13 +58,13 @@ public abstract class FishingBobberLavaFishingMixin extends Entity {
     @Nullable
     private ItemDisplayElement bobber = null;
 
-    @Override
+    /*@Override
     public boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double speed) {
         if (tag == FluidTags.LAVA && !this.level().isClientSide()) {
             return super.updateFluidHeightAndDoFluidPushing(tag, 0.014 * 2);
         }
         return super.updateFluidHeightAndDoFluidPushing(tag, speed);
-    }
+    }*/
 
     @Inject(
         method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;II)V",
@@ -80,7 +80,7 @@ public abstract class FishingBobberLavaFishingMixin extends Entity {
             @Override
             public void startWatching(ServerPlayer player, Consumer<Packet<ClientGamePacketListener>> packetConsumer) {
                 super.startWatching(player, packetConsumer);
-                packetConsumer.accept(VirtualEntityUtils.createRidePacket(this.getEntityId(), IntList.of(getId())));
+                packetConsumer.accept(VirtualEntityUtils.createClientboundSetPassengersPacket(this.getEntityId(), IntList.of(getId())));
             }
         };
         new EntityAttachment(this.holder, this, true);
@@ -170,9 +170,9 @@ public abstract class FishingBobberLavaFishingMixin extends Entity {
         return original.call(instance, tag) || (!this.level().isClientSide() && instance.is(FluidTags.LAVA));
     }
 
-    @WrapOperation(method = "catchingFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
-    private boolean replaceLava(BlockState instance, Block block, Operation<Boolean> original) {
-        return original.call(instance, block) || (!this.level().isClientSide() && instance.is(Blocks.LAVA));
+    @WrapOperation(method = "catchingFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z"))
+    private boolean replaceLava(BlockState instance, Object o, Operation<Boolean> original) {
+        return original.call(instance, o) || (!this.level().isClientSide() && instance.is(Blocks.LAVA));
     }
 
     @ModifyArg(method = "catchingFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))

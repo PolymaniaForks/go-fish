@@ -7,7 +7,6 @@ import draylar.gofish.item.LureItem;
 import draylar.gofish.item.SoulLureItem;
 import draylar.gofish.item.TooltippedItem;
 import eu.pb4.polymer.core.api.item.SimplePolymerItem;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

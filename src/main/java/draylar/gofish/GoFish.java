@@ -3,12 +3,11 @@ package draylar.gofish;
 import com.google.common.hash.HashCode;
 import draylar.gofish.command.FishCommand;
 import draylar.gofish.registry.*;
-import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
+import eu.pb4.polymer.core.api.item.PolymerCreativeModeTabUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
-import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistryBuilder;
-import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
+import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
+import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -35,7 +34,7 @@ public class GoFish implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PolymerItemGroupUtils.registerPolymerItemGroup(ITEM_GROUP, PolymerItemGroupUtils.builder()
+        PolymerCreativeModeTabUtils.registerPolymerCreativeModeTab(ITEM_GROUP, PolymerCreativeModeTabUtils.builder()
                 .icon(() -> new ItemStack(GoFishItems.GOLDEN_FISH))
                 .title(Component.translatable("itemGroup.gofish.group"))
                 .displayItems((a, b) -> GoFishItems.ITEMS.forEach(b::accept))
@@ -50,12 +49,12 @@ public class GoFish implements ModInitializer {
 
         FishCommand.register();
 
-        FuelRegistryEvents.BUILD.register((builder, context) -> {
+        FuelValueEvents.BUILD.register((builder, context) -> {
             builder.add(GoFishItems.OAKFISH, 3 * context.baseSmeltTime() / 2);
             builder.add(GoFishItems.CHARFISH, 8 * context.baseSmeltTime());
         });
 
-        FabricBrewingRecipeRegistryBuilder.BUILD.register(this::registerBrewingRecipes);
+        FabricPotionBrewingBuilder.BUILD.register(this::registerBrewingRecipes);
 
         PolymerResourcePackUtils.addModAssets("go-fish");
 

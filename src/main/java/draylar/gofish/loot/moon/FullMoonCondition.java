@@ -10,7 +10,6 @@ import net.minecraft.world.level.MoonPhase;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import java.util.Set;
 
 public record FullMoonCondition() implements LootItemCondition {
@@ -19,7 +18,7 @@ public record FullMoonCondition() implements LootItemCondition {
     public static final MapCodec<FullMoonCondition> CODEC = MapCodec.unit(INSTANCE);
 
     @Override
-    public LootItemConditionType getType() {
+    public MapCodec<? extends LootItemCondition> codec() {
         return GoFishLoot.FULL_MOON;
     }
 

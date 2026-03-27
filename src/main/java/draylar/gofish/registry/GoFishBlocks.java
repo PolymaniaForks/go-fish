@@ -4,7 +4,6 @@ import draylar.gofish.GoFish;
 import draylar.gofish.block.CrateBlock;
 import draylar.gofish.block.WoodenCrateBlock;
 import draylar.gofish.item.CrateItem;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;

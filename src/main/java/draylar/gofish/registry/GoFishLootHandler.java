@@ -4,8 +4,8 @@ import draylar.gofish.impl.GoFishLootTables;
 import draylar.gofish.loot.WeatherCondition;
 import draylar.gofish.loot.biome.MatchBiomeLootCondition;
 import draylar.gofish.loot.moon.FullMoonCondition;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
-import net.fabricmc.fabric.api.loot.v2.LootTableSource;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.advancements.criterion.FishingHookPredicate;
@@ -28,7 +28,7 @@ public class GoFishLootHandler {
     }
 
     private static void registerFishHandler() {
-        LootTableEvents.MODIFY.register((ResourceKey<LootTable> key, LootTable.Builder tableBuilder, LootTableSource source) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, _, _) -> {
             if (BuiltInLootTables.FISHING.equals(key)) {
                 var canModify = new MutableBoolean(true);
                 tableBuilder.modifyPools(lpb -> {
@@ -61,36 +61,36 @@ public class GoFishLootHandler {
                     // In most situations, only 1-2 fish are added per biome or area, so the chance for that fish is still ~5-10%.
 
                     // Cold Fish in Icy biomes
-                    lpb.with(LootItem.lootTableItem(GoFishItems.ICICLE_FISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_ICY)).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.SNOWBALL_FISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_ICY)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.ICICLE_FISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_ICY)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.SNOWBALL_FISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_ICY)).build());
 
                     // Swamp
-                    lpb.with(LootItem.lootTableItem(GoFishItems.SLIMEFISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_SWAMP)).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.LILYFISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_SWAMP)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.SLIMEFISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_SWAMP)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.LILYFISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_SWAMP)).build());
 
                     // Ocean
-                    lpb.with(LootItem.lootTableItem(GoFishItems.SEAWEED_EEL).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_OCEAN)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.SEAWEED_EEL).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_OCEAN)).build());
 
                     // Mesa
-                    lpb.with(LootItem.lootTableItem(GoFishItems.TERRAFISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_BADLANDS)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.TERRAFISH).setWeight(18).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_BADLANDS)).build());
 
                     // General Plains
-                    lpb.with(LootItem.lootTableItem(GoFishItems.CARROT_CARP).setWeight(15).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_PLAINS)).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.OAKFISH).setWeight(15).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_PLAINS)).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.CARROT_CARP).setWeight(15).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_FOREST)).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.OAKFISH).setWeight(15).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_FOREST)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.CARROT_CARP).setWeight(15).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_PLAINS)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.OAKFISH).setWeight(15).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_PLAINS)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.CARROT_CARP).setWeight(15).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_FOREST)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.OAKFISH).setWeight(15).when(MatchBiomeLootCondition.builderTag(ConventionalBiomeTags.IS_FOREST)).build());
 
                     // Misc
-                    lpb.with(LootItem.lootTableItem(GoFishItems.LUNARFISH).setWeight(50).when(FullMoonCondition.builder()).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.GALAXY_STARFISH).setWeight(25).when(FullMoonCondition.builder()).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.STARRY_SALMON).setWeight(50).when(FullMoonCondition.builder()).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.NEBULA_SWORDFISH).setWeight(25).when(FullMoonCondition.builder()).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.LUNARFISH).setWeight(50).when(FullMoonCondition.builder()).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.GALAXY_STARFISH).setWeight(25).when(FullMoonCondition.builder()).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.STARRY_SALMON).setWeight(50).when(FullMoonCondition.builder()).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.NEBULA_SWORDFISH).setWeight(25).when(FullMoonCondition.builder()).build());
 
                     // weather
-                    lpb.with(LootItem.lootTableItem(GoFishItems.RAINY_BASS).setWeight(80).when(WeatherCondition.builder(true, false, false)).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.THUNDERING_BASS).setWeight(50).when(WeatherCondition.builder(false, true, false)).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.CLOUDY_CRAB).setWeight(50).when(LocationCheck.checkLocation(LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atLeast(150)))).build());
-                    lpb.with(LootItem.lootTableItem(GoFishItems.BLIZZARD_BASS).setWeight(80).when(WeatherCondition.builder(false, false, true)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.RAINY_BASS).setWeight(80).when(WeatherCondition.builder(true, false, false)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.THUNDERING_BASS).setWeight(50).when(WeatherCondition.builder(false, true, false)).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.CLOUDY_CRAB).setWeight(50).when(LocationCheck.checkLocation(LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atLeast(150)))).build());
+                    lpb.add(LootItem.lootTableItem(GoFishItems.BLIZZARD_BASS).setWeight(80).when(WeatherCondition.builder(false, false, true)).build());
                 });
             }
         });

@@ -11,12 +11,13 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import xyz.nucleoid.packettweaker.PacketContext;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 
 public class CrateBlock extends Block implements FactoryBlock, CustomBreakingParticleBlock {
 
@@ -39,7 +40,7 @@ public class CrateBlock extends Block implements FactoryBlock, CustomBreakingPar
     @Override
     public ParticleOptions getBreakingParticle(BlockState state) {
         if (this.breakingParticle == null) {
-            this.breakingParticle = new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(this.asItem()));
+            this.breakingParticle = new ItemParticleOption(ParticleTypes.ITEM, new ItemStackTemplate(this.asItem()));
         }
         return this.breakingParticle;
     }
@@ -47,7 +48,7 @@ public class CrateBlock extends Block implements FactoryBlock, CustomBreakingPar
 
     public static final class Model extends BlockModel {
         public Model(BlockPos pos, BlockState state) {
-            var main = ItemDisplayElementUtil.createSolid(state.getBlock().asItem());
+            var main = ItemDisplayElementUtil.createSimple(state.getBlock().asItem());
             main.setScale(new Vector3f(2));
             this.addElement(main);
         }

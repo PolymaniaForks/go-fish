@@ -4,11 +4,12 @@ import draylar.gofish.api.*;
 import draylar.gofish.registry.GoFishEnchantments;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -61,7 +62,7 @@ public class ExtendedFishingRodItem extends FishingRodItem implements PolymerIte
     @Override
     public InteractionResult use(Level world, Player user, InteractionHand hand) {
         ItemStack heldStack = user.getItemInHand(hand);
-        RandomSource random = world.random;
+        RandomSource random = world.getRandom();
 
         if(user.fishing != null) {
             // Retrieve fishing bobber and damage Fishing Rod

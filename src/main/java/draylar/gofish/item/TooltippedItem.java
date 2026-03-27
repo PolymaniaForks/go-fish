@@ -1,7 +1,7 @@
 package draylar.gofish.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import xyz.nucleoid.packettweaker.PacketContext;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 
 import java.util.List;
 import java.util.function.Consumer;
