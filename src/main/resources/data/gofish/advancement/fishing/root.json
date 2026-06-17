@@ -13,7 +13,7 @@
     "show_toast": false,
     "announce_to_chat": false,
     "hidden": false,
-    "background": "gofish:textures/gui/water.png"
+    "background": "gofish:gui/water"
   },
   "criteria": {
     "fishing_rod": {
