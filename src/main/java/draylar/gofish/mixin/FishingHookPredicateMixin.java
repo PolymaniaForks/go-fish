@@ -1,6 +1,6 @@
 package draylar.gofish.mixin;
 
-import net.minecraft.advancements.criterion.FishingHookPredicate;
+import net.minecraft.advancements.predicates.entity.FishingHookPredicate;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

@@ -59,7 +59,7 @@ public class GoFish implements ModInitializer {
         PolymerResourcePackUtils.addModAssets("go-fish");
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            //PatboxLazyModelGen.run();
+            PatboxLazyModelGen.run();
         }
     }
 

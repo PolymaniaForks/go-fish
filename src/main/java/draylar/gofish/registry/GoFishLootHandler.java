@@ -7,10 +7,10 @@ import draylar.gofish.loot.moon.FullMoonCondition;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.FishingHookPredicate;
-import net.minecraft.advancements.criterion.LocationPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.predicates.entity.FishingHookPredicate;
+import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -43,7 +43,7 @@ public class GoFishLootHandler {
                             .when(
                                     LootItemEntityPropertyCondition.hasProperties(
                                             LootContext.EntityTarget.THIS,
-                                            EntityPredicate.Builder.entity().subPredicate(FishingHookPredicate.inOpenWater(true))
+                                            EntityPredicate.Builder.entity().fishingHook(FishingHookPredicate.inOpenWater(true))
                                     )
                             )
                     );

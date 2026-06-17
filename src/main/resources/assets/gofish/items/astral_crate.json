@@ -1,1 +1,1 @@
-{"model":{"model":"gofish:item/astral_crate","type":"minecraft:model"}}
+{"model":{"models":[{"model":"gofish:item/astral_crate","type":"minecraft:model"},{"base":"gofish:item/astral_crate","model":{"effect":"portal","type":"minecraft:end_cube"},"transformation":{"translation":[0.01,0.01,0.01],"left_rotation":[0.0,0.0,0.0,1.0],"scale":[0.98,0.98,0.98],"right_rotation":[-0.0,-0.0,-0.0,1.0]},"type":"minecraft:special"}],"type":"minecraft:composite"}}
