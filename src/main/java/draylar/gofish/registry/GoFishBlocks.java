@@ -52,6 +52,7 @@ public class GoFishBlocks {
     public static Block GILDED_BLACKSTONE_CRATE = registerCrate("gilded_blackstone_crate", Block.Settings.copy(Blocks.GILDED_BLACKSTONE), CrateBlock::new, new Item.Settings().fireproof().maxCount(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/gilded_blackstone_crate"));
     public static Block ASTRAL_CRATE = registerCrate("astral_crate", Block.Settings.copy(Blocks.END_STONE).nonOpaque(), CrateBlock::new, new Item.Settings().fireproof().maxCount(8).rarity(Rarity.EPIC), GoFish.id("gameplay/fishing/astral_crate"));
     public static Block END_CRATE = registerCrate("end_crate", Block.Settings.copy(Blocks.END_STONE), CrateBlock::new, new Item.Settings().fireproof().maxCount(8).rarity(Rarity.EPIC), GoFish.id("gameplay/fishing/end_crate"));
+    public static Block PRISMARINE_CRATE = registerCrate("prismarine_crate", Block.Settings.copy(Blocks.PRISMARINE), CrateBlock::new, new Item.Settings().maxCount(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/prismarine_crate"));
 
     public static <T extends CrateBlock> T registerCrate(String name, AbstractBlock.Settings blockSettings, Function<AbstractBlock.Settings, T> blockFunc, Item.Settings settings, Identifier id) {
         var block = blockFunc.apply(blockSettings.registryKey(RegistryKey.of(RegistryKeys.BLOCK, GoFish.id(name))).nonOpaque());
