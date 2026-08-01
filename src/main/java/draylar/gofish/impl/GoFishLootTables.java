@@ -1,18 +1,17 @@
 package draylar.gofish.impl;
 
 import draylar.gofish.GoFish;
-import net.minecraft.loot.LootTable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 public class GoFishLootTables {
 
-    public static final RegistryKey<LootTable> NETHER_FISHING = of("gameplay/fishing/nether/fishing");
-    public static final RegistryKey<LootTable> END_FISHING = of("gameplay/fishing/end/fishing");
-    public static final RegistryKey<LootTable> CRATES = of("gameplay/fishing/crates");
+    public static final ResourceKey<LootTable> NETHER_FISHING = of("gameplay/fishing/nether/fishing");
+    public static final ResourceKey<LootTable> END_FISHING = of("gameplay/fishing/end/fishing");
+    public static final ResourceKey<LootTable> CRATES = of("gameplay/fishing/crates");
 
-    private static RegistryKey<LootTable> of(String s) {
-        return RegistryKey.of(RegistryKeys.LOOT_TABLE, GoFish.id(s));
+    private static ResourceKey<LootTable> of(String s) {
+        return ResourceKey.create(Registries.LOOT_TABLE, GoFish.id(s));
     }
 }

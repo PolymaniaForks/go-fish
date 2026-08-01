@@ -1,28 +1,27 @@
 package draylar.gofish.mixin;
 
 import draylar.gofish.api.SmeltingBobber;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.projectile.FishingBobberEntity;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.SmeltingRecipe;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.Optional;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.Level;
 
-@Mixin(FishingBobberEntity.class)
+@Mixin(FishingHook.class)
 public abstract class FishingBobberAutosmeltMixin extends Entity implements SmeltingBobber {
 
-    private FishingBobberAutosmeltMixin(EntityType<?> type, World world) {
+    private FishingBobberAutosmeltMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
@@ -40,25 +39,25 @@ public abstract class FishingBobberAutosmeltMixin extends Entity implements Smel
     }
 
     @ModifyVariable(
-            method = "use",
+            method = "retrieve",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/ItemEntity;setVelocity(DDD)V",
+                    target = "Lnet/minecraft/world/entity/item/ItemEntity;setDeltaMovement(DDD)V",
                     shift = At.Shift.AFTER
             ),
             index = 9
     )
     private ItemEntity processOutput(ItemEntity itemEntity) {
-        if (this.getEntityWorld() instanceof ServerWorld world) {
+        if (this.level() instanceof ServerLevel world) {
             if (gf_smelts) {
-                Optional<RecipeEntry<SmeltingRecipe>> cooked = world.getRecipeManager().getFirstMatch(
+                Optional<RecipeHolder<SmeltingRecipe>> cooked = world.recipeAccess().getRecipeFor(
                         RecipeType.SMELTING,
-                        new SingleStackRecipeInput(itemEntity.getStack()),
-                        getEntityWorld()
+                        new SingleRecipeInput(itemEntity.getItem()),
+                        level()
                 );
 
-                cooked.ifPresent(smeltingRecipe -> itemEntity.setStack(smeltingRecipe.value().craft(
-                        new SingleStackRecipeInput(itemEntity.getStack()), getEntityWorld().getRegistryManager())));
+                cooked.ifPresent(smeltingRecipe -> itemEntity.setItem(smeltingRecipe.value().assemble(
+                        new SingleRecipeInput(itemEntity.getItem()))));
             }
         }
 

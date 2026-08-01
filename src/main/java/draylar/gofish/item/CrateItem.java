@@ -2,26 +2,29 @@ package draylar.gofish.item;
 
 import eu.pb4.factorytools.api.item.FactoryBlockItem;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
-import net.minecraft.block.Block;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.context.LootWorldContext;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.*;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,46 +32,46 @@ import java.util.function.Consumer;
 
 public class CrateItem extends FactoryBlockItem {
 
-    private final RegistryKey<LootTable> loot;
+    private final ResourceKey<LootTable> loot;
 
-    public <T extends Block & PolymerBlock> CrateItem(T block, Settings settings) {
+    public <T extends Block & PolymerBlock> CrateItem(T block, Properties settings) {
         super(block, settings);
-        loot = LootTables.PILLAGER_OUTPOST_CHEST;
+        loot = BuiltInLootTables.PILLAGER_OUTPOST;
     }
 
-    public <T extends Block & PolymerBlock> CrateItem(T block, Settings settings, Identifier loot) {
+    public <T extends Block & PolymerBlock> CrateItem(T block, Properties settings, Identifier loot) {
         super(block, settings);
-        this.loot = RegistryKey.of(RegistryKeys.LOOT_TABLE, loot);
+        this.loot = ResourceKey.create(Registries.LOOT_TABLE, loot);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        PlayerEntity player = context.getPlayer();
+    public InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
 
-        if(player != null && player.isSneaking()) {
-            return ActionResult.FAIL;
+        if(player != null && player.isShiftKeyDown()) {
+            return InteractionResult.FAIL;
         }
 
-        return super.useOnBlock(context);
+        return super.useOn(context);
     }
 
     @Override
-    public ActionResult use(World world, PlayerEntity user, Hand hand) {
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
         // only open crate if user is sneaking
-        if(user.isSneaking()) {
-            if(!world.isClient()) {
+        if(user.isShiftKeyDown()) {
+            if(!world.isClientSide()) {
                 // drop loot
-                getDrops((ServerWorld) world, loot, user.getEntityPos()).forEach(stack -> {
-                    ItemScatterer.spawn(world, user.getX(), user.getY(), user.getZ(), stack);
+                getDrops((ServerLevel) world, loot, user.position()).forEach(stack -> {
+                    Containers.dropItemStack(world, user.getX(), user.getY(), user.getZ(), stack);
                 });
             }
 
             // remove 1x from inventory for non-creative players
             if(!user.isCreative()) {
-                user.getStackInHand(hand).decrement(1);
+                user.getItemInHand(hand).shrink(1);
             }
 
-            return ActionResult.SUCCESS_SERVER;
+            return InteractionResult.SUCCESS_SERVER;
         }
 
         return super.use(world, user, hand);
@@ -80,18 +83,18 @@ public class CrateItem extends FactoryBlockItem {
      * @param identifier loot table Identifier
      * @return list of drops generated from the loot table
      */
-    private List<ItemStack> getDrops(ServerWorld world, RegistryKey<LootTable> identifier, Vec3d pos) {
+    private List<ItemStack> getDrops(ServerLevel world, ResourceKey<LootTable> identifier, Vec3 pos) {
         List<ItemStack> output = new ArrayList<>();
 
-        if (world != null && !world.isClient()) {
+        if (world != null && !world.isClientSide()) {
             // set up loot objects
-            LootTable supplier = Objects.requireNonNull(world.getServer()).getReloadableRegistries().getLootTable(identifier);
-            LootWorldContext.Builder builder =
-                    new LootWorldContext.Builder(world)
-                            .add(LootContextParameters.ORIGIN, pos);
+            LootTable supplier = Objects.requireNonNull(world.getServer()).reloadableRegistries().getLootTable(identifier);
+            LootParams.Builder builder =
+                    new LootParams.Builder(world)
+                            .withParameter(LootContextParams.ORIGIN, pos);
 
             // build & add loot to output
-            List<ItemStack> stacks = supplier.generateLoot(builder.build(LootContextTypes.CHEST));
+            List<ItemStack> stacks = supplier.getRandomItems(builder.create(LootContextParamSets.CHEST));
             output.addAll(stacks);
         }
 
@@ -99,8 +102,8 @@ public class CrateItem extends FactoryBlockItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
-        textConsumer.accept(Text.translatable("gofish.crate_tooltip").formatted(Formatting.GRAY).formatted(Formatting.ITALIC));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
+        super.appendHoverText(stack, context, displayComponent, textConsumer, type);
+        textConsumer.accept(Component.translatable("gofish.crate_tooltip").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 }

@@ -10,32 +10,6 @@ import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.decoration.DisplayEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FishingBobberEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,16 +18,39 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Consumer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 
-@Mixin(FishingBobberEntity.class)
+@Mixin(FishingHook.class)
 public abstract class FishingBobberLavaFishingMixin extends Entity {
 
-    @Shadow public abstract PlayerEntity getPlayerOwner();
+    @Shadow public abstract Player getPlayerOwner();
     @Shadow public abstract void remove(Entity.RemovalReason reason);
 
-    @Shadow private FishingBobberEntity.State state;
+    @Shadow private FishingHook.FishHookState currentState;
 
-    private FishingBobberLavaFishingMixin(EntityType<?> type, World world) {
+    private FishingBobberLavaFishingMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
@@ -61,29 +58,29 @@ public abstract class FishingBobberLavaFishingMixin extends Entity {
     @Nullable
     private ItemDisplayElement bobber = null;
 
-    @Override
-    public boolean updateMovementInFluid(TagKey<Fluid> tag, double speed) {
-        if (tag == FluidTags.LAVA && !this.getEntityWorld().isClient()) {
-            return super.updateMovementInFluid(tag, 0.014 * 2);
+    /*@Override
+    public boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double speed) {
+        if (tag == FluidTags.LAVA && !this.level().isClientSide()) {
+            return super.updateFluidHeightAndDoFluidPushing(tag, 0.014 * 2);
         }
-        return super.updateMovementInFluid(tag, speed);
-    }
+        return super.updateFluidHeightAndDoFluidPushing(tag, speed);
+    }*/
 
     @Inject(
-        method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/World;II)V",
+        method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;II)V",
         at = @At("RETURN")
     )
-    public void onInit(EntityType<? extends FishingBobberEntity> type, World world, int luckBonus, int waitTimeReductionTicks, CallbackInfo ci) {
-        if (world.isClient()) {
+    public void onInit(EntityType<? extends FishingHook> type, Level world, int luckBonus, int waitTimeReductionTicks, CallbackInfo ci) {
+        if (world.isClientSide()) {
             return;
         }
 
         this.holder = new ElementHolder();
         this.bobber = new ItemDisplayElement() {
             @Override
-            public void startWatching(ServerPlayerEntity player, Consumer<Packet<ClientPlayPacketListener>> packetConsumer) {
+            public void startWatching(ServerPlayer player, Consumer<Packet<ClientGamePacketListener>> packetConsumer) {
                 super.startWatching(player, packetConsumer);
-                packetConsumer.accept(VirtualEntityUtils.createRidePacket(this.getEntityId(), IntList.of(getId())));
+                packetConsumer.accept(VirtualEntityUtils.createClientboundSetPassengersPacket(this.getEntityId(), IntList.of(getId())));
             }
         };
         new EntityAttachment(this.holder, this, true);
@@ -93,15 +90,15 @@ public abstract class FishingBobberLavaFishingMixin extends Entity {
         method = "tick",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/fluid/FluidState;isIn(Lnet/minecraft/registry/tag/TagKey;)Z"
+            target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z"
         )
     )
     public void onTick(CallbackInfo ci, @Local FluidState fluidState) {
-        if (this.getEntityWorld().isClient()) {
+        if (this.level().isClientSide()) {
             return;
         }
-        if (fluidState.isIn(FluidTags.LAVA)) {
-            if (this.state == FishingBobberEntity.State.BOBBING) {
+        if (fluidState.is(FluidTags.LAVA)) {
+            if (this.currentState == FishingHook.FishHookState.BOBBING) {
                 if (this.bobber != null && this.bobber.getHolder() == null) {
                     this.holder.addElement(bobber);
                 }
@@ -117,23 +114,23 @@ public abstract class FishingBobberLavaFishingMixin extends Entity {
     // this mixin is used to determine whether a bobber is actually bobbing for fish
     @ModifyVariable(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/fluid/FluidState;isIn(Lnet/minecraft/registry/tag/TagKey;)Z", ordinal = 0),
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0),
             index = 2
     )
     private float bobberInLava(float value) {
-        if (this.getEntityWorld().isClient()) {
+        if (this.level().isClientSide()) {
             return value;
         }
 
-        BlockPos blockPos = this.getBlockPos();
-        FluidState fluidState = this.getEntityWorld().getFluidState(blockPos);
+        BlockPos blockPos = this.blockPosition();
+        FluidState fluidState = this.level().getFluidState(blockPos);
 
-        if (!fluidState.isIn(FluidTags.LAVA)) {
+        if (!fluidState.is(FluidTags.LAVA)) {
             return value;
         }
         // Fishing rod doesn't set active hand, and can be used in either, so we check both
-        Item mainHandItem = getPlayerOwner().getMainHandStack().getItem();
-        Item offHandItem = getPlayerOwner().getOffHandStack().getItem();
+        Item mainHandItem = getPlayerOwner().getMainHandItem().getItem();
+        Item offHandItem = getPlayerOwner().getOffhandItem().getItem();
 
         // Player is holding extended fishing rod, check if it can be in lava.
         // Otherwise, fallback to default behavior.
@@ -141,25 +138,25 @@ public abstract class FishingBobberLavaFishingMixin extends Entity {
             ExtendedFishingRodItem usedRod = (ExtendedFishingRodItem) mainHandItem;
 
             if (usedRod.canFishInLava()) {
-                return fluidState.getHeight(this.getEntityWorld(), blockPos);
+                return fluidState.getHeight(this.level(), blockPos);
             }
         } else if (offHandItem instanceof ExtendedFishingRodItem) {
             ExtendedFishingRodItem usedRod = (ExtendedFishingRodItem) offHandItem;
 
             if (usedRod.canFishInLava()) {
-                return fluidState.getHeight(this.getEntityWorld(), blockPos);
+                return fluidState.getHeight(this.level(), blockPos);
             }
         }
 
         if (!getPlayerOwner().isCreative()) {
-            getPlayerOwner().getStackInHand(Hand.MAIN_HAND).damage(5, getPlayerOwner(), EquipmentSlot.MAINHAND);
+            getPlayerOwner().getItemInHand(InteractionHand.MAIN_HAND).hurtAndBreak(5, getPlayerOwner(), EquipmentSlot.MAINHAND);
         }
 
-        if (getEntityWorld() instanceof ServerWorld) {
-            ((ServerWorld) getEntityWorld()).spawnParticles(ParticleTypes.LAVA, getX(), getY(), getZ(), 5, 0, 1, 0, 0);
+        if (level() instanceof ServerLevel) {
+            ((ServerLevel) level()).sendParticles(ParticleTypes.LAVA, getX(), getY(), getZ(), 5, 0, 1, 0, 0);
         }
 
-        getPlayerOwner().playSound(SoundEvents.ENTITY_GENERIC_BURN, .5f, 1f);
+        getPlayerOwner().playSound(SoundEvents.GENERIC_BURN, .5f, 1f);
         remove(RemovalReason.KILLED);
 
         return 0;
@@ -167,46 +164,46 @@ public abstract class FishingBobberLavaFishingMixin extends Entity {
 
     @WrapOperation(
             method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/fluid/FluidState;isIn(Lnet/minecraft/registry/tag/TagKey;)Z", ordinal = 1)
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z", ordinal = 1)
     )
     private boolean fallOutsideLiquid(FluidState instance, TagKey<Fluid> tag, Operation<Boolean> original) {
-        return original.call(instance, tag) || (!this.getEntityWorld().isClient() && instance.isIn(FluidTags.LAVA));
+        return original.call(instance, tag) || (!this.level().isClientSide() && instance.is(FluidTags.LAVA));
     }
 
-    @WrapOperation(method = "tickFishingLogic", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isOf(Lnet/minecraft/block/Block;)Z"))
-    private boolean replaceLava(BlockState instance, Block block, Operation<Boolean> original) {
-        return original.call(instance, block) || (!this.getEntityWorld().isClient() && instance.isOf(Blocks.LAVA));
+    @WrapOperation(method = "catchingFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z"))
+    private boolean replaceLava(BlockState instance, Object o, Operation<Boolean> original) {
+        return original.call(instance, o) || (!this.level().isClientSide() && instance.is(Blocks.LAVA));
     }
 
-    @ModifyArg(method = "tickFishingLogic", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;spawnParticles(Lnet/minecraft/particle/ParticleEffect;DDDIDDDD)I"))
-    private ParticleEffect replaceLavaParticle(ParticleEffect particle, @Local ServerWorld world, @Local(argsOnly = true) BlockPos pos) {
+    @ModifyArg(method = "catchingFish", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
+    private ParticleOptions replaceLavaParticle(ParticleOptions particle, @Local ServerLevel world, @Local(argsOnly = true) BlockPos pos) {
         BlockState state = world.getBlockState(pos);
-        if (state.getFluidState().isIn(FluidTags.LAVA)) {
+        if (state.getFluidState().is(FluidTags.LAVA)) {
             return ParticleTypes.LAVA;
         }
         return particle;
     }
 
     @WrapOperation(
-        method = "tickFishingLogic",
+        method = "catchingFish",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/World;isSkyVisible(Lnet/minecraft/util/math/BlockPos;)Z"
+            target = "Lnet/minecraft/world/level/Level;canSeeSky(Lnet/minecraft/core/BlockPos;)Z"
         )
     )
-    public boolean isSkyVisible(World instance, BlockPos pos, Operation<Boolean> original) {
+    public boolean isSkyVisible(Level instance, BlockPos pos, Operation<Boolean> original) {
         // The sky is never visible, dont punish players for not fishing in a sky visible spot
-        if (!instance.getDimension().hasSkyLight()) {
+        if (!instance.dimensionType().hasSkyLight()) {
             return true;
         }
         return original.call(instance, pos);
     }
 
     @WrapOperation(
-            method = "getPositionType(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/entity/projectile/FishingBobberEntity$PositionType;",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/fluid/FluidState;isIn(Lnet/minecraft/registry/tag/TagKey;)Z")
+            method = "getOpenWaterTypeForBlock(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/entity/projectile/FishingHook$OpenWaterType;",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z")
     )
     private boolean isInValidLiquid(FluidState instance, TagKey<Fluid> tag, Operation<Boolean> original) {
-        return instance.isIn(FluidTags.LAVA) || original.call(instance, tag);
+        return instance.is(FluidTags.LAVA) || original.call(instance, tag);
     }
 }

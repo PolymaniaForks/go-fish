@@ -1,4 +1,3 @@
-accessWidener   v1  named
-
-accessible method net/minecraft/entity/projectile/FishingBobberEntity removeIfInvalid (Lnet/minecraft/entity/player/PlayerEntity;)Z
-accessible class net/minecraft/entity/projectile/FishingBobberEntity$State
+accessWidener	v1	official
+accessible	method	net/minecraft/world/entity/projectile/FishingHook	shouldStopFishing	(Lnet/minecraft/world/entity/player/Player;)Z
+accessible	class	net/minecraft/world/entity/projectile/FishingHook$FishHookState

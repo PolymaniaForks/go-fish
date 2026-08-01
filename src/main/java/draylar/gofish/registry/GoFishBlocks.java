@@ -4,19 +4,16 @@ import draylar.gofish.GoFish;
 import draylar.gofish.block.CrateBlock;
 import draylar.gofish.block.WoodenCrateBlock;
 import draylar.gofish.item.CrateItem;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Rarity;
-
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.util.function.Function;
 
 public class GoFishBlocks {
@@ -28,7 +25,7 @@ public class GoFishBlocks {
     //   Special: enchanting bottle, low-level enchanted book, emerald, bucket / bucket with fish, more materials
     //   Weapons: damaged crossbows, arrows, bows, stone tools
     //   Fish: all types of vanilla fish
-    public static Block WOODEN_CRATE = registerCrate("wooden_crate", Block.Settings.copy(Blocks.OAK_WOOD), WoodenCrateBlock::new, new Item.Settings().maxCount(8), GoFish.id("gameplay/fishing/wooden_crate"));
+    public static Block WOODEN_CRATE = registerCrate("wooden_crate", Block.Properties.ofFullCopy(Blocks.OAK_WOOD), WoodenCrateBlock::new, new Item.Properties().stacksTo(8), GoFish.id("gameplay/fishing/wooden_crate"));
 
     // The Iron Crate provides less junk, a chance for iron tools, and better rare loot.
     //   Junk: Oak Planks, sticks, Oak Logs, String, Seaweed, Kelp, Bones
@@ -37,27 +34,27 @@ public class GoFishBlocks {
     //   Special: mid-level enchanted book, emerald, more materials
     //   Weapons: damaged crossbows, arrows, bows, stone tools
     //   Fish: all types of vanilla fish
-    public static Block IRON_CRATE = registerCrate("iron_crate", Block.Settings.copy(Blocks.IRON_BLOCK), CrateBlock::new, new Item.Settings().maxCount(8), GoFish.id("gameplay/fishing/iron_crate"));
+    public static Block IRON_CRATE = registerCrate("iron_crate", Block.Properties.ofFullCopy(Blocks.IRON_BLOCK), CrateBlock::new, new Item.Properties().stacksTo(8), GoFish.id("gameplay/fishing/iron_crate"));
 
     // The Gold Crate is a rare crate that drops gold items and materials.
-    public static Block GOLDEN_CRATE = registerCrate("golden_crate", Block.Settings.copy(Blocks.GOLD_BLOCK), CrateBlock::new, new Item.Settings().maxCount(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/golden_crate"));
+    public static Block GOLDEN_CRATE = registerCrate("golden_crate", Block.Properties.ofFullCopy(Blocks.GOLD_BLOCK), CrateBlock::new, new Item.Properties().stacksTo(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/golden_crate"));
 
     // The Diamond Crate provides good materials
-    public static Block DIAMOND_CRATE = registerCrate("diamond_crate", Block.Settings.copy(Blocks.DIAMOND_BLOCK), CrateBlock::new, new Item.Settings().maxCount(8).rarity(Rarity.RARE), GoFish.id("gameplay/fishing/diamond_crate"));
-    public static Block FROSTED_CRATE = registerCrate("frosted_crate", Block.Settings.copy(Blocks.BLUE_ICE), CrateBlock::new, new Item.Settings().maxCount(8).rarity(Rarity.RARE), GoFish.id("gameplay/fishing/frosted_crate"));
-    public static Block SLIMEY_CRATE = registerCrate("slimey_crate", Block.Settings.copy(Blocks.SLIME_BLOCK), CrateBlock::new, new Item.Settings().maxCount(8), GoFish.id("gameplay/fishing/slimey_crate"));
-    public static Block SUPPLY_CRATE = registerCrate("supply_crate", Block.Settings.copy(Blocks.OAK_WOOD), CrateBlock::new, new Item.Settings().maxCount(8), GoFish.id("gameplay/fishing/supply_crate"));
-    public static Block FIERY_CRATE = registerCrate("fiery_crate", Block.Settings.copy(Blocks.NETHER_BRICKS), CrateBlock::new, new Item.Settings().fireproof().maxCount(8), GoFish.id("gameplay/fishing/fiery_crate"));
-    public static Block SOUL_CRATE = registerCrate("soul_crate", Block.Settings.copy(Blocks.STONE), CrateBlock::new, new Item.Settings().fireproof().maxCount(8).rarity(Rarity.RARE), GoFish.id("gameplay/fishing/soul_crate"));
-    public static Block GILDED_BLACKSTONE_CRATE = registerCrate("gilded_blackstone_crate", Block.Settings.copy(Blocks.GILDED_BLACKSTONE), CrateBlock::new, new Item.Settings().fireproof().maxCount(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/gilded_blackstone_crate"));
-    public static Block ASTRAL_CRATE = registerCrate("astral_crate", Block.Settings.copy(Blocks.END_STONE).nonOpaque(), CrateBlock::new, new Item.Settings().fireproof().maxCount(8).rarity(Rarity.EPIC), GoFish.id("gameplay/fishing/astral_crate"));
-    public static Block END_CRATE = registerCrate("end_crate", Block.Settings.copy(Blocks.END_STONE), CrateBlock::new, new Item.Settings().fireproof().maxCount(8).rarity(Rarity.EPIC), GoFish.id("gameplay/fishing/end_crate"));
-    public static Block PRISMARINE_CRATE = registerCrate("prismarine_crate", Block.Settings.copy(Blocks.PRISMARINE), CrateBlock::new, new Item.Settings().maxCount(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/prismarine_crate"));
+    public static Block DIAMOND_CRATE = registerCrate("diamond_crate", Block.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK), CrateBlock::new, new Item.Properties().stacksTo(8).rarity(Rarity.RARE), GoFish.id("gameplay/fishing/diamond_crate"));
+    public static Block FROSTED_CRATE = registerCrate("frosted_crate", Block.Properties.ofFullCopy(Blocks.BLUE_ICE), CrateBlock::new, new Item.Properties().stacksTo(8).rarity(Rarity.RARE), GoFish.id("gameplay/fishing/frosted_crate"));
+    public static Block SLIMEY_CRATE = registerCrate("slimey_crate", Block.Properties.ofFullCopy(Blocks.SLIME_BLOCK), CrateBlock::new, new Item.Properties().stacksTo(8), GoFish.id("gameplay/fishing/slimey_crate"));
+    public static Block SUPPLY_CRATE = registerCrate("supply_crate", Block.Properties.ofFullCopy(Blocks.OAK_WOOD), CrateBlock::new, new Item.Properties().stacksTo(8), GoFish.id("gameplay/fishing/supply_crate"));
+    public static Block FIERY_CRATE = registerCrate("fiery_crate", Block.Properties.ofFullCopy(Blocks.NETHER_BRICKS), CrateBlock::new, new Item.Properties().fireResistant().stacksTo(8), GoFish.id("gameplay/fishing/fiery_crate"));
+    public static Block SOUL_CRATE = registerCrate("soul_crate", Block.Properties.ofFullCopy(Blocks.STONE), CrateBlock::new, new Item.Properties().fireResistant().stacksTo(8).rarity(Rarity.RARE), GoFish.id("gameplay/fishing/soul_crate"));
+    public static Block GILDED_BLACKSTONE_CRATE = registerCrate("gilded_blackstone_crate", Block.Properties.ofFullCopy(Blocks.GILDED_BLACKSTONE), CrateBlock::new, new Item.Properties().fireResistant().stacksTo(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/gilded_blackstone_crate"));
+    public static Block ASTRAL_CRATE = registerCrate("astral_crate", Block.Properties.ofFullCopy(Blocks.END_STONE).noOcclusion(), CrateBlock::new, new Item.Properties().fireResistant().stacksTo(8).rarity(Rarity.EPIC), GoFish.id("gameplay/fishing/astral_crate"));
+    public static Block END_CRATE = registerCrate("end_crate", Block.Properties.ofFullCopy(Blocks.END_STONE), CrateBlock::new, new Item.Properties().fireResistant().stacksTo(8).rarity(Rarity.EPIC), GoFish.id("gameplay/fishing/end_crate"));
+    public static Block PRISMARINE_CRATE = registerCrate("prismarine_crate", Block.Properties.ofFullCopy(Blocks.PRISMARINE), CrateBlock::new, new Item.Properties().stacksTo(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/prismarine_crate"));
 
-    public static <T extends CrateBlock> T registerCrate(String name, AbstractBlock.Settings blockSettings, Function<AbstractBlock.Settings, T> blockFunc, Item.Settings settings, Identifier id) {
-        var block = blockFunc.apply(blockSettings.registryKey(RegistryKey.of(RegistryKeys.BLOCK, GoFish.id(name))).nonOpaque());
-        T registeredBlock = Registry.register(Registries.BLOCK, GoFish.id(name), block);
-        var item = Registry.register(Registries.ITEM, GoFish.id(name), new CrateItem(block, settings.registryKey(RegistryKey.of(RegistryKeys.ITEM, GoFish.id(name))).useBlockPrefixedTranslationKey(), id));
+    public static <T extends CrateBlock> T registerCrate(String name, BlockBehaviour.Properties blockSettings, Function<BlockBehaviour.Properties, T> blockFunc, Item.Properties settings, Identifier id) {
+        var block = blockFunc.apply(blockSettings.setId(ResourceKey.create(Registries.BLOCK, GoFish.id(name))).noOcclusion());
+        T registeredBlock = Registry.register(BuiltInRegistries.BLOCK, GoFish.id(name), block);
+        var item = Registry.register(BuiltInRegistries.ITEM, GoFish.id(name), new CrateItem(block, settings.setId(ResourceKey.create(Registries.ITEM, GoFish.id(name))).useBlockDescriptionPrefix(), id));
         GoFishItems.ITEMS.add(item);
         return registeredBlock;
     }

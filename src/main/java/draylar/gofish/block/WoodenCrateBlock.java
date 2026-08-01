@@ -1,37 +1,35 @@
 package draylar.gofish.block;
 
+import com.mojang.datafixers.util.Pair;
 import draylar.gofish.GoFish;
 import eu.pb4.factorytools.api.block.FactoryBlock;
 import eu.pb4.factorytools.api.virtualentity.BlockModel;
 import eu.pb4.factorytools.api.virtualentity.ItemDisplayElementUtil;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import xyz.nucleoid.packettweaker.PacketContext;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 
 import java.util.List;
 
 public class WoodenCrateBlock extends CrateBlock {
 
-    public WoodenCrateBlock(Settings settings) {
+    public WoodenCrateBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    public @Nullable ElementHolder createElementHolder(ServerWorld world, BlockPos pos, BlockState initialBlockState) {
-        return new Model(pos, initialBlockState);
+    public @Nullable ElementHolder createElementHolder(ServerLevel world, BlockPos pos, BlockState initialBlockState) {
+        return new draylar.gofish.block.WoodenCrateBlock.Model(pos, initialBlockState);
     }
 
 
@@ -45,14 +43,14 @@ public class WoodenCrateBlock extends CrateBlock {
 
         private static Pair<ItemStack, Float> entry(Identifier id, float yaw) {
             var stack = new ItemStack(Items.TRIAL_KEY);
-            stack.set(DataComponentTypes.ITEM_MODEL, id);
+            stack.set(DataComponents.ITEM_MODEL, id);
             return new Pair<>(stack, yaw);
         }
 
         public Model(BlockPos pos, BlockState state) {
-            var model = Util.getRandom(MODELS, Random.create(pos.asLong()));
-            var main = ItemDisplayElementUtil.createSimple(model.getLeft());
-            main.setYaw(model.getRight());
+            var model = Util.getRandom(MODELS, RandomSource.create(pos.asLong()));
+            var main = ItemDisplayElementUtil.createSimple(model.getFirst());
+            main.setYaw(model.getSecond());
             main.setScale(new Vector3f(2));
             this.addElement(main);
         }

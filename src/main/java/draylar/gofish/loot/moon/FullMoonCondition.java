@@ -4,37 +4,38 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import draylar.gofish.registry.GoFishLoot;
-import net.minecraft.entity.Entity;
-import net.minecraft.loot.condition.LootCondition;
-import net.minecraft.loot.condition.LootConditionType;
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.loot.context.LootContextParameters;
-
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.MoonPhase;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import java.util.Set;
 
-public record FullMoonCondition() implements LootCondition {
+public record FullMoonCondition() implements LootItemCondition {
 
     public static final FullMoonCondition INSTANCE = new FullMoonCondition();
     public static final MapCodec<FullMoonCondition> CODEC = MapCodec.unit(INSTANCE);
 
     @Override
-    public LootConditionType getType() {
+    public MapCodec<? extends LootItemCondition> codec() {
         return GoFishLoot.FULL_MOON;
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        Entity entity = lootContext.get(LootContextParameters.THIS_ENTITY);
+        Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);
 
         if(entity != null) {
-            return entity.getEntityWorld().isNight() &&
-                    entity.getEntityWorld().getDimension().getMoonPhase(entity.getEntityWorld().getLunarTime()) == 0;
+            //var angle = entity.getEntityWorld().getEnvironmentAttributes().getAttributeValue(EnvironmentAttributes.MOON_ANGLE_VISUAL, entity.getEntityPos());
+            var phase = entity.level().environmentAttributes().getValue(EnvironmentAttributes.MOON_PHASE, entity.position());
+            return phase == MoonPhase.FULL_MOON && entity.level().isDarkOutside();
         }
 
         return false;
     }
 
-    public static LootCondition.Builder builder() {
+    public static LootItemCondition.Builder builder() {
         return () -> INSTANCE;
     }
 }
