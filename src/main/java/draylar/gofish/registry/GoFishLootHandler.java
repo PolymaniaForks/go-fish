@@ -1,6 +1,7 @@
 package draylar.gofish.registry;
 
 import draylar.gofish.impl.GoFishLootTables;
+import draylar.gofish.loot.MatchFishingRodCondition;
 import draylar.gofish.loot.WeatherCondition;
 import draylar.gofish.loot.biome.MatchBiomeLootCondition;
 import draylar.gofish.loot.moon.FullMoonCondition;
@@ -11,7 +12,9 @@ import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.predicates.entity.FishingHookPredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -91,6 +94,18 @@ public class GoFishLootHandler {
                     lpb.add(LootItem.lootTableItem(GoFishItems.THUNDERING_BASS).setWeight(50).when(WeatherCondition.builder(false, true, false)).build());
                     lpb.add(LootItem.lootTableItem(GoFishItems.CLOUDY_CRAB).setWeight(50).when(LocationCheck.checkLocation(LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atLeast(150)))).build());
                     lpb.add(LootItem.lootTableItem(GoFishItems.BLIZZARD_BASS).setWeight(80).when(WeatherCondition.builder(false, false, true)).build());
+
+                    lpb.add(LootItem.lootTableItem(Items.SKELETON_SKULL)
+                            .setWeight(50)
+                            .when(MatchFishingRodCondition.builder(BuiltInRegistries.ITEM.getKey(GoFishItems.SKELETAL_ROD)))
+                            .build());
+
+                    if (GoFishLootTables.END_FISHING.equals(key)) {
+                        lpb.add(LootItem.lootTableItem(GoFishItems.MATRIX_FISH)
+                                .setWeight(100)
+                                .when(MatchFishingRodCondition.builder(BuiltInRegistries.ITEM.getKey(GoFishItems.MATRIX_ROD)))
+                                .build());
+                    }
                 });
             }
         });

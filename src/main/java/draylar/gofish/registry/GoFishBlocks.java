@@ -49,6 +49,7 @@ public class GoFishBlocks {
     public static Block GILDED_BLACKSTONE_CRATE = registerCrate("gilded_blackstone_crate", Block.Properties.ofFullCopy(Blocks.GILDED_BLACKSTONE), CrateBlock::new, new Item.Properties().fireResistant().stacksTo(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/gilded_blackstone_crate"));
     public static Block ASTRAL_CRATE = registerCrate("astral_crate", Block.Properties.ofFullCopy(Blocks.END_STONE).noOcclusion(), CrateBlock::new, new Item.Properties().fireResistant().stacksTo(8).rarity(Rarity.EPIC), GoFish.id("gameplay/fishing/astral_crate"));
     public static Block END_CRATE = registerCrate("end_crate", Block.Properties.ofFullCopy(Blocks.END_STONE), CrateBlock::new, new Item.Properties().fireResistant().stacksTo(8).rarity(Rarity.EPIC), GoFish.id("gameplay/fishing/end_crate"));
+    public static Block PRISMARINE_CRATE = registerCrate("prismarine_crate", Block.Properties.ofFullCopy(Blocks.PRISMARINE), CrateBlock::new, new Item.Properties().stacksTo(8).rarity(Rarity.UNCOMMON), GoFish.id("gameplay/fishing/prismarine_crate"));
 
     public static <T extends CrateBlock> T registerCrate(String name, BlockBehaviour.Properties blockSettings, Function<BlockBehaviour.Properties, T> blockFunc, Item.Properties settings, Identifier id) {
         var block = blockFunc.apply(blockSettings.setId(ResourceKey.create(Registries.BLOCK, GoFish.id(name))).noOcclusion());

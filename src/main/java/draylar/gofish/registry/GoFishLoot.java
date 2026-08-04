@@ -3,6 +3,7 @@ package draylar.gofish.registry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import draylar.gofish.GoFish;
+import draylar.gofish.loot.MatchFishingRodCondition;
 import draylar.gofish.loot.WeatherCondition;
 import draylar.gofish.loot.biome.MatchBiomeLootCondition;
 import draylar.gofish.loot.moon.FullMoonCondition;
@@ -15,6 +16,7 @@ public class GoFishLoot {
     public static final MapCodec<? extends LootItemCondition> MATCH_BIOME = register("match_biome", MatchBiomeLootCondition.CODEC);
     public static final MapCodec<? extends LootItemCondition> FULL_MOON = register("full_moon", FullMoonCondition.CODEC);
     public static final MapCodec<? extends LootItemCondition> WEATHER = register("weather", WeatherCondition.CODEC);
+    public static final MapCodec<? extends LootItemCondition> MATCH_FISHING_ROD = register("match_fishing_rod", MatchFishingRodCondition.CODEC);
 
     private static MapCodec<? extends LootItemCondition> register(String id, MapCodec<? extends LootItemCondition> codec) {
         return Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, GoFish.id(id), codec);

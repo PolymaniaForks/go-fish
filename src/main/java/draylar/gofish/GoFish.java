@@ -58,9 +58,10 @@ public class GoFish implements ModInitializer {
 
         PolymerResourcePackUtils.addModAssets("go-fish");
 
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            PatboxLazyModelGen.run();
-        }
+        // TODO: this check fires when mod jar is added to dev env run, causing log spam. Find a better approach.
+//        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+//            PatboxLazyModelGen.run();
+//        }
     }
 
     public static Identifier id(String name) {

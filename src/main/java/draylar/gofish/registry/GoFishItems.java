@@ -27,53 +27,53 @@ import java.util.function.Function;
 public class GoFishItems {
     public static final List<Item> ITEMS = new ArrayList<>();
 
-    public static final Item BLAZE_ROD = register("blaze_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings)
+    public static final Item BLAZE_ROD = register("blaze_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings.enchantable(1))
             .durability(125)
             .autosmelt()
             .lavaProof(true).build());
 
-    public static final Item SKELETAL_ROD = register("skeletal_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings)
+    public static final Item SKELETAL_ROD = register("skeletal_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings.enchantable(1))
             .durability(75)
             .withCastSound(new SoundInstance(SoundEvents.SKELETON_STEP, 1.0F, SoundInstance.DEFAULT_PITCH))
             .withRetrieveSound(new SoundInstance(SoundEvents.SKELETON_STEP, 0.5F, SoundInstance.DEFAULT_PITCH))
             .lavaProof(true)
             .build());
 
-    public static final Item DIAMOND_REINFORCED_ROD = register("diamond_reinforced_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings)
+    public static final Item DIAMOND_REINFORCED_ROD = register("diamond_reinforced_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings.enchantable(1))
             .durability(300)
             .color(ChatFormatting.AQUA)
             .lavaProof(true)
             .build());
 
-    public static final Item EYE_OF_FISHING = register("ender_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings)
+    public static final Item EYE_OF_FISHING = register("ender_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings.enchantable(1))
             .durability(250)
             .color(ChatFormatting.LIGHT_PURPLE)
             .build());
 
-    public static final Item FROSTED_ROD = register("frosted_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings)
+    public static final Item FROSTED_ROD = register("frosted_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings.enchantable(1))
             .durability(150)
             .build());
 
-    public static final Item SLIME_ROD = register("slime_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings)
+    public static final Item SLIME_ROD = register("slime_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings.enchantable(1))
             .durability(150)
             .color(ChatFormatting.GREEN)
             .withCastSound(new SoundInstance(SoundEvents.SLIME_JUMP, 0.8F, SoundInstance.DEFAULT_PITCH))
             .withRetrieveSound(new SoundInstance(SoundEvents.SLIME_JUMP, 0.5F, SoundInstance.DEFAULT_PITCH))
             .build());
 
-    public static final Item SOUL_ROD = register("soul_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings)
+    public static final Item SOUL_ROD = register("soul_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings.enchantable(1))
             .durability(250)
             .color(ChatFormatting.LIGHT_PURPLE)
             .baseExperienceGain(5)
             .lavaProof(true)
             .build());
 
-    public static final Item MATRIX_ROD = register("matrix_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings)
+    public static final Item MATRIX_ROD = register("matrix_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings.enchantable(1))
             .durability(200)
             .color(ChatFormatting.LIGHT_PURPLE)
             .build());
 
-    public static final Item CELESTIAL_ROD = register("celestial_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings)
+    public static final Item CELESTIAL_ROD = register("celestial_rod", (settings) -> new ExtendedFishingRodItem.Builder(settings.enchantable(1))
             .durability(150)
             .color(ChatFormatting.LIGHT_PURPLE)
             .tooltipLines(1)
