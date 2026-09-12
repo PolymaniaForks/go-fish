@@ -29,88 +29,76 @@
           "type": "minecraft:item",
           "weight": 4,
           "name": "gofish:astral_crate",
-          "conditions": [
-            {
-              "condition": "gofish:full_moon"
-            }
-          ]
+          "condition": {
+            "type": "gofish:full_moon"
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 2,
           "name": "gofish:supply_crate",
-          "conditions": [
-            {
-              "condition": "gofish:match_biome",
-              "category": {
-                "valid": [
-                  "gofish:plains_biomes",
-                  "minecraft:is_forest",
-                  "minecraft:is_river"
-                ]
-              }
+          "condition": {
+            "type": "gofish:match_biome",
+            "category": {
+              "valid": [
+                "gofish:plains_biomes",
+                "minecraft:is_forest",
+                "minecraft:is_river"
+              ]
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 3,
           "name": "gofish:soul_crate",
-          "conditions": [
-            {
-              "condition": "gofish:match_biome",
-              "category": {
-                "valid": [
-                  "minecraft:is_nether"
-                ]
-              }
+          "condition": {
+            "type": "gofish:match_biome",
+            "category": {
+              "valid": [
+                "minecraft:is_nether"
+              ]
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 4,
           "name": "gofish:frosted_crate",
-          "conditions": [
-            {
-              "condition": "gofish:match_biome",
-              "category": {
-                "valid": [
-                  "gofish:icy_biomes"
-                ]
-              }
+          "condition": {
+            "type": "gofish:match_biome",
+            "category": {
+              "valid": [
+                "gofish:icy_biomes"
+              ]
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 4,
           "name": "gofish:slimey_crate",
-          "conditions": [
-            {
-              "condition": "gofish:match_biome",
-              "category": {
-                "valid": [
-                  "gofish:swamp_biomes"
-                ]
-              }
+          "condition": {
+            "type": "gofish:match_biome",
+            "category": {
+              "valid": [
+                "gofish:swamp_biomes"
+              ]
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 4,
           "name": "gofish:gilded_blackstone_crate",
-          "conditions": [
-            {
-              "condition": "gofish:match_biome",
-              "biome": {
-                "valid": [
-                  "minecraft:basalt_deltas"
-                ]
-              }
+          "condition": {
+            "type": "gofish:match_biome",
+            "biome": {
+              "valid": [
+                "minecraft:basalt_deltas"
+              ]
             }
-          ]
+          }
         }
       ]
     }

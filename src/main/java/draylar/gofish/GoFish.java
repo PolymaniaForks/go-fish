@@ -6,8 +6,6 @@ import draylar.gofish.registry.*;
 import eu.pb4.polymer.core.api.item.PolymerCreativeModeTabUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
-import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -16,7 +14,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,13 +46,6 @@ public class GoFish implements ModInitializer {
 
         FishCommand.register();
 
-        FuelValueEvents.BUILD.register((builder, context) -> {
-            builder.add(GoFishItems.OAKFISH, 3 * context.baseSmeltTime() / 2);
-            builder.add(GoFishItems.CHARFISH, 8 * context.baseSmeltTime());
-        });
-
-        FabricPotionBrewingBuilder.BUILD.register(this::registerBrewingRecipes);
-
         PolymerResourcePackUtils.addModAssets("go-fish");
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
@@ -66,12 +56,4 @@ public class GoFish implements ModInitializer {
     public static Identifier id(String name) {
         return Identifier.fromNamespaceAndPath("gofish", name);
     }
-
-    public void registerBrewingRecipes(PotionBrewing.Builder builder) {
-        builder.addMix(Potions.AWKWARD, GoFishItems.CLOUDY_CRAB, Potions.SLOW_FALLING);
-        builder.addMix(Potions.AWKWARD, GoFishItems.CHARFISH, Potions.WEAKNESS);
-        builder.addMix(Potions.AWKWARD, GoFishItems.RAINY_BASS, Potions.WATER_BREATHING);
-        builder.addMix(Potions.AWKWARD, GoFishItems.MAGMA_COD, Potions.FIRE_RESISTANCE);
-    }
-
 }

@@ -33,7 +33,7 @@ public record MatchBiomeLootCondition(Optional<BiomeTagPredicate> category, Opti
 
     @Override
     public boolean test(LootContext lootContext) {
-        Vec3 origin = lootContext.getOptionalParameter(LootContextParams.ORIGIN);
+        Vec3 origin = lootContext.getOptional(LootContextParams.ORIGIN);
 
         if(origin != null) {
             Holder<Biome> fisherBiome = lootContext.getLevel().getBiome(new BlockPos((int) Math.floor(origin.x), (int) Math.floor(origin.y), (int) Math.floor(origin.z)));

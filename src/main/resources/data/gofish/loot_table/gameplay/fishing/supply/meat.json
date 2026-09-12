@@ -2,6 +2,7 @@
   "pools": [
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 3,
         "max": 6
       },
@@ -10,71 +11,66 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:porkchop",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 3,
-                "max": 6
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 6
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:beef",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 3,
-                "max": 6
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 6
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:chicken",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 3,
-                "max": 6
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 6
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:rabbit",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 3,
-                "max": 6
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 6
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:mutton",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 3,
-                "max": 6
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 6
             }
-          ]
+          }
         }
       ]
     }

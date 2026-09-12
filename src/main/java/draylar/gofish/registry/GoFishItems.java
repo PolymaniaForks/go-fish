@@ -19,7 +19,10 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.Consumables;
+import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -94,8 +97,8 @@ public class GoFishItems {
     public static final Item TERRAFISH = register("terrafish", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.5f).build()));
     public static final Item CARROT_CARP = register("carrot_carp", new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.25f).build()));
     public static final Item BAKED_CARROT_CARP = register("baked_carrot_carp", new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.5f).build()));
-    public static final Item OAKFISH = register("oakfish", new Item.Properties().food(new FoodProperties.Builder().nutrition(3).build()));
-    public static final Item CHARFISH = register("charfish", new Item.Properties().food(new FoodProperties.Builder().nutrition(2).build(),
+    public static final Item OAKFISH = register("oakfish", new Item.Properties().cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS).food(new FoodProperties.Builder().nutrition(3).build()));
+    public static final Item CHARFISH = register("charfish", new Item.Properties().cookingFuel(ContextIntProviders.COOKING_TIME_COAL).food(new FoodProperties.Builder().nutrition(2).build(),
             Consumables.defaultFood().onConsume(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 5, 0), 1)).build()));
 
     // nether

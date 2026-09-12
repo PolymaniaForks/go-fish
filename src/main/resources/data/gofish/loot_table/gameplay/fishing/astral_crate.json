@@ -2,6 +2,7 @@
   "pools": [
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 1,
         "max": 3
       },
@@ -10,68 +11,58 @@
           "type": "minecraft:item",
           "weight": 3,
           "name": "gofish:lunarfish",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 5
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 5
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "gofish:galaxy_starfish",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 5
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 5
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 3,
           "name": "gofish:starry_salmon",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 5
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 5
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "gofish:nebula_swordfish",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 5
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 5
             }
-          ]
+          }
         }
       ]
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "random_chance",
-          "chance": 0.25
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -82,35 +73,38 @@
           "type": "minecraft:item",
           "weight": 10,
           "name": "gofish:celestial_rod",
-          "functions": [
-            {
-              "function": "enchant_with_levels",
-              "levels": {
-                "min": 15,
-                "max": 25
-              }
+          "modifier": {
+            "type": "enchant_with_levels",
+            "levels": {
+              "type": "minecraft:uniform",
+              "min": 15,
+              "max": 25
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "gofish:celestial_rod",
-          "functions": [
-            {
-              "function": "enchant_with_levels",
-              "levels": {
-                "min": 29,
-                "max": 30
-              },
-              "options": "#gofish:on_fishing_loot"
-            }
-          ]
+          "modifier": {
+            "type": "enchant_with_levels",
+            "levels": {
+              "type": "minecraft:uniform",
+              "min": 29,
+              "max": 30
+            },
+            "options": "#gofish:on_fishing_loot"
+          }
         }
-      ]
+      ],
+      "condition": {
+        "type": "random_chance",
+        "chance": 0.25
+      }
     },
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 1,
         "max": 2
       },
@@ -119,43 +113,40 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:iron_ingot",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 5
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 5
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:iron_nugget",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 18
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 18
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:glass",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 16
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 16
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
@@ -166,44 +157,40 @@
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "random_chance",
-          "chance": 0.5
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
           "weight": 5,
           "name": "minecraft:book",
-          "functions": [
-            {
-              "function": "enchant_with_levels",
-              "levels": {
-                "min": 1,
-                "max": 15
-              },
-              "options": "#gofish:on_fishing_loot"
-            }
-          ]
+          "modifier": {
+            "type": "enchant_with_levels",
+            "levels": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 15
+            },
+            "options": "#gofish:on_fishing_loot"
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:book",
-          "functions": [
-            {
-              "function": "enchant_with_levels",
-              "levels": {
-                "min": 20,
-                "max": 30
-              },
-              "options": "#gofish:on_fishing_loot"
-            }
-          ]
+          "modifier": {
+            "type": "enchant_with_levels",
+            "levels": {
+              "type": "minecraft:uniform",
+              "min": 20,
+              "max": 30
+            },
+            "options": "#gofish:on_fishing_loot"
+          }
         }
-      ]
+      ],
+      "condition": {
+        "type": "random_chance",
+        "chance": 0.5
+      }
     }
   ]
 }

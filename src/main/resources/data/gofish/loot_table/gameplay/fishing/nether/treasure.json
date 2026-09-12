@@ -14,50 +14,50 @@
         },
         {
           "type": "minecraft:item",
-          "functions": [
+          "name": "minecraft:bow",
+          "modifier": [
             {
-              "function": "minecraft:set_damage",
+              "type": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.0,
                 "max": 0.25
               }
             },
             {
-              "function": "minecraft:enchant_with_levels",
+              "type": "minecraft:enchant_with_levels",
               "levels": 30,
               "options": "#gofish:on_fishing_loot"
             }
-          ],
-          "name": "minecraft:bow"
+          ]
         },
         {
           "type": "minecraft:item",
-          "functions": [
+          "name": "minecraft:fishing_rod",
+          "modifier": [
             {
-              "function": "minecraft:set_damage",
+              "type": "minecraft:set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.0,
                 "max": 0.25
               }
             },
             {
-              "function": "minecraft:enchant_with_levels",
+              "type": "minecraft:enchant_with_levels",
               "levels": 30,
               "options": "#gofish:on_fishing_loot"
             }
-          ],
-          "name": "minecraft:fishing_rod"
+          ]
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": 30,
-              "options": "#gofish:on_fishing_loot"
-            }
-          ],
-          "name": "minecraft:book"
+          "name": "minecraft:book",
+          "modifier": {
+            "type": "minecraft:enchant_with_levels",
+            "levels": 30,
+            "options": "#gofish:on_fishing_loot"
+          }
         }
       ]
     }

@@ -42,8 +42,8 @@ public record WeatherCondition(Optional<Boolean> raining, Optional<Boolean> thun
 
     @Override
     public boolean test(LootContext lootContext) {
-        @Nullable Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);
-        @Nullable Vec3 pos = lootContext.getOptionalParameter(LootContextParams.ORIGIN);
+        @Nullable Entity entity = lootContext.getOptional(LootContextParams.THIS_ENTITY);
+        @Nullable Vec3 pos = lootContext.getOptional(LootContextParams.ORIGIN);
 
         if(entity != null && pos != null) {
             Level world = entity.level();

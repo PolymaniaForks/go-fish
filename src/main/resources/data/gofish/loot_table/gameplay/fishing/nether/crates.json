@@ -18,31 +18,27 @@
           "type": "minecraft:item",
           "weight": 5,
           "name": "gofish:soul_crate",
-          "conditions": [
-            {
-              "condition": "gofish:match_biome",
-              "biome": {
-                "valid": [
-                  "minecraft:soul_sand_valley"
-                ]
-              }
+          "condition": {
+            "type": "gofish:match_biome",
+            "biome": {
+              "valid": [
+                "minecraft:soul_sand_valley"
+              ]
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 5,
           "name": "gofish:gilded_blackstone_crate",
-          "conditions": [
-            {
-              "condition": "gofish:match_biome",
-              "biome": {
-                "valid": [
-                  "minecraft:basalt_deltas"
-                ]
-              }
+          "condition": {
+            "type": "gofish:match_biome",
+            "biome": {
+              "valid": [
+                "minecraft:basalt_deltas"
+              ]
             }
-          ]
+          }
         }
       ]
     }

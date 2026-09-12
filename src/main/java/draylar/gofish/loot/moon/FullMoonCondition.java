@@ -24,7 +24,7 @@ public record FullMoonCondition() implements LootItemCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
-        Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);
+        Entity entity = lootContext.getOptional(LootContextParams.THIS_ENTITY);
 
         if(entity != null) {
             //var angle = entity.getEntityWorld().getEnvironmentAttributes().getAttributeValue(EnvironmentAttributes.MOON_ANGLE_VISUAL, entity.getEntityPos());

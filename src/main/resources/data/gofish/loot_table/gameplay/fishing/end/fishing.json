@@ -6,37 +6,33 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "conditions": [
-            {
-              "condition": "minecraft:entity_properties",
-              "predicate": {
-                "type_specific/fishing_hook": {
-                  "in_open_water": true
-                }
-              },
-              "entity": "this"
-            }
-          ],
           "weight": 5,
           "quality": 2,
-          "value": "gofish:gameplay/fishing/end/treasure"
+          "value": "gofish:gameplay/fishing/end/treasure",
+          "condition": {
+            "type": "minecraft:entity_properties",
+            "predicate": {
+              "type_specific/fishing_hook": {
+                "in_open_water": true
+              }
+            },
+            "entity": "this"
+          }
         },
         {
           "type": "minecraft:loot_table",
-          "conditions": [
-            {
-              "condition": "minecraft:entity_properties",
-              "predicate": {
-                "type_specific/fishing_hook": {
-                  "in_open_water": true
-                }
-              },
-              "entity": "this"
-            }
-          ],
           "weight": 5,
           "quality": 2,
-          "value": "gofish:gameplay/fishing/end/crates"
+          "value": "gofish:gameplay/fishing/end/crates",
+          "condition": {
+            "type": "minecraft:entity_properties",
+            "predicate": {
+              "type_specific/fishing_hook": {
+                "in_open_water": true
+              }
+            },
+            "entity": "this"
+          }
         },
         {
           "type": "minecraft:loot_table",

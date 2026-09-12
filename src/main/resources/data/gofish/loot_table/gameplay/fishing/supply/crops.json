@@ -2,6 +2,7 @@
   "pools": [
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 3,
         "max": 6
       },
@@ -10,99 +11,92 @@
           "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:potato",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 3,
-                "max": 9
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 9
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:carrot",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 2,
-                "max": 9
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 2,
+              "max": 9
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:beetroot",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 3,
-                "max": 9
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 9
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:wheat_seeds",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 4
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 4
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:wheat",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 3,
-                "max": 9
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 9
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 2,
           "name": "minecraft:melon_slice",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 3
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:melon_seeds",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 3
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
@@ -113,15 +107,14 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:sugar_cane",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 3,
-                "max": 10
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 3,
+              "max": 10
             }
-          ]
+          }
         }
       ]
     }

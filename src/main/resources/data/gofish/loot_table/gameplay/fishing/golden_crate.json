@@ -2,6 +2,7 @@
   "pools": [
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 1,
         "max": 3
       },
@@ -10,86 +11,77 @@
           "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:golden_apple",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 6
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 6
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:golden_carrot",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 8
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 8
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 3,
           "name": "minecraft:glistering_melon_slice",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 12
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 12
             }
-          ]
+          }
         }
       ]
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "random_chance",
-          "chance": 0.1
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "gofish:golden_fish"
         }
-      ]
+      ],
+      "condition": {
+        "type": "random_chance",
+        "chance": 0.1
+      }
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "random_chance",
-          "chance": 0.2
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:golden_helmet",
-          "functions": [
+          "modifier": [
             {
-              "function": "set_damage",
+              "type": "set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.5,
                 "max": 1
               }
             },
             {
-              "function": "enchant_with_levels",
+              "type": "enchant_with_levels",
               "levels": {
+                "type": "minecraft:uniform",
                 "min": 15,
                 "max": 15
               }
@@ -100,17 +92,19 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:golden_chestplate",
-          "functions": [
+          "modifier": [
             {
-              "function": "set_damage",
+              "type": "set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.5,
                 "max": 1
               }
             },
             {
-              "function": "enchant_with_levels",
+              "type": "enchant_with_levels",
               "levels": {
+                "type": "minecraft:uniform",
                 "min": 15,
                 "max": 15
               }
@@ -121,17 +115,19 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:golden_leggings",
-          "functions": [
+          "modifier": [
             {
-              "function": "enchant_with_levels",
+              "type": "enchant_with_levels",
               "levels": {
+                "type": "minecraft:uniform",
                 "min": 15,
                 "max": 15
               }
             },
             {
-              "function": "set_damage",
+              "type": "set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.5,
                 "max": 1
               }
@@ -142,49 +138,51 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:golden_boots",
-          "functions": [
+          "modifier": [
             {
-              "function": "set_damage",
+              "type": "set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.5,
                 "max": 1
               }
             },
             {
-              "function": "enchant_with_levels",
+              "type": "enchant_with_levels",
               "levels": {
+                "type": "minecraft:uniform",
                 "min": 15,
                 "max": 15
               }
             }
           ]
         }
-      ]
+      ],
+      "condition": {
+        "type": "random_chance",
+        "chance": 0.2
+      }
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "random_chance",
-          "chance": 0.2
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:golden_sword",
-          "functions": [
+          "modifier": [
             {
-              "function": "set_damage",
+              "type": "set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.5,
                 "max": 1
               }
             },
             {
-              "function": "enchant_with_levels",
+              "type": "enchant_with_levels",
               "levels": {
+                "type": "minecraft:uniform",
                 "min": 15,
                 "max": 15
               }
@@ -195,17 +193,19 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:golden_pickaxe",
-          "functions": [
+          "modifier": [
             {
-              "function": "set_damage",
+              "type": "set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.5,
                 "max": 1
               }
             },
             {
-              "function": "enchant_with_levels",
+              "type": "enchant_with_levels",
               "levels": {
+                "type": "minecraft:uniform",
                 "min": 15,
                 "max": 15
               }
@@ -216,17 +216,19 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:golden_axe",
-          "functions": [
+          "modifier": [
             {
-              "function": "enchant_with_levels",
+              "type": "enchant_with_levels",
               "levels": {
+                "type": "minecraft:uniform",
                 "min": 15,
                 "max": 15
               }
             },
             {
-              "function": "set_damage",
+              "type": "set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.5,
                 "max": 1
               }
@@ -237,17 +239,19 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:golden_shovel",
-          "functions": [
+          "modifier": [
             {
-              "function": "set_damage",
+              "type": "set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.5,
                 "max": 1
               }
             },
             {
-              "function": "enchant_with_levels",
+              "type": "enchant_with_levels",
               "levels": {
+                "type": "minecraft:uniform",
                 "min": 15,
                 "max": 15
               }
@@ -258,33 +262,33 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:golden_hoe",
-          "functions": [
+          "modifier": [
             {
-              "function": "set_damage",
+              "type": "set_damage",
               "damage": {
+                "type": "minecraft:uniform",
                 "min": 0.5,
                 "max": 1
               }
             },
             {
-              "function": "enchant_with_levels",
+              "type": "enchant_with_levels",
               "levels": {
+                "type": "minecraft:uniform",
                 "min": 15,
                 "max": 15
               }
             }
           ]
         }
-      ]
+      ],
+      "condition": {
+        "type": "random_chance",
+        "chance": 0.2
+      }
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "random_chance",
-          "chance": 0.5
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -295,30 +299,28 @@
           "type": "minecraft:item",
           "weight": 5,
           "name": "minecraft:gold_ingot",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 6
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 6
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:gold_ore",
           "quality": 2,
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 3
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 3
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
@@ -329,36 +331,38 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:gold_nugget",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 12
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 12
             }
-          ]
+          }
         }
-      ]
+      ],
+      "condition": {
+        "type": "random_chance",
+        "chance": 0.5
+      }
     },
     {
       "rolls": 1,
-      "conditions": [
-        {
-          "condition": "random_chance",
-          "chance": 0.05
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:enchanted_golden_apple"
         }
-      ]
+      ],
+      "condition": {
+        "type": "random_chance",
+        "chance": 0.05
+      }
     },
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 0,
         "max": 2
       },
@@ -367,34 +371,33 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:cod",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 5
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 5
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:salmon",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 5
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 5
             }
-          ]
+          }
         }
       ]
     },
     {
       "rolls": {
+        "type": "minecraft:uniform",
         "min": 1,
         "max": 3
       },
@@ -403,43 +406,40 @@
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:cobweb",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 4
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 4
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "minecraft:string",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 6
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 6
             }
-          ]
+          }
         },
         {
           "type": "minecraft:item",
           "weight": 1,
           "name": "gofish:seaweed",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 10
-              }
+          "modifier": {
+            "type": "set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 10
             }
-          ]
+          }
         }
       ]
     }

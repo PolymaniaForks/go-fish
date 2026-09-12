@@ -28,7 +28,7 @@ public class GoFishLootHandler {
     }
 
     private static void registerFishHandler() {
-        LootTableEvents.MODIFY.register((key, tableBuilder, _, _) -> {
+        LootTableEvents.MODIFY.register((key, tableBuilder, _, provider) -> {
             if (BuiltInLootTables.FISHING.equals(key)) {
                 var canModify = new MutableBoolean(true);
                 tableBuilder.modifyPools(lpb -> {
@@ -37,7 +37,7 @@ public class GoFishLootHandler {
                     } else {
                         return;
                     }
-                    lpb.add(NestedLootTable.lootTableReference(GoFishLootTables.CRATES)
+                    lpb.add(NestedLootTable.lootTableReference(provider.getOrThrow(GoFishLootTables.CRATES))
                             .setWeight(5)
                             .setQuality(2)
                             .when(

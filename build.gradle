@@ -37,7 +37,7 @@ dependencies {
 
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    implementation include('eu.pb4:factorytools:0.11.0+26.2')
+    implementation include('eu.pb4:factorytools:0.12.0+26.3')
     implementation "eu.pb4:polymer-resource-pack:${project.polymer_version}"
     implementation "eu.pb4:polymer-resource-pack-extras:${project.polymer_version}"
     implementation "eu.pb4:polymer-core:${project.polymer_version}"
